@@ -4,7 +4,9 @@
 * Ohjelmoitu
 * Testattu
 * Täyttää hyväksymäkriteerit
-* Tntegroitu osaksi tuotetta. 
+* Integroitu osaksi tuotetta. 
+
+
 
 * [Project 
 Backlog](https://github.com/tattimus/Lukuvinkkikirjasto-OHTU/projects/2)
