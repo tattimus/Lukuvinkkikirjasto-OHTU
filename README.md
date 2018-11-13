@@ -1,9 +1,12 @@
 # Lukuvinkkikirjasto-OHTU
-Defenition of done:
-Ohjelmoitu, testattu ja integroitu osaksi tuotetta. 
 
-Project Backlog:
-https://github.com/tattimus/Lukuvinkkikirjasto-OHTU/projects/2
+**Defenition of done:**
+* Ohjelmoitu
+* Testattu
+* Täyttää hyväksymäkriteerit
+* Tntegroitu osaksi tuotetta. 
 
-Sprint backlog:
-https://github.com/tattimus/Lukuvinkkikirjasto-OHTU/projects/1
+* [Project 
+Backlog](https://github.com/tattimus/Lukuvinkkikirjasto-OHTU/projects/2)
+* [Sprint 
+backlog](https://github.com/tattimus/Lukuvinkkikirjasto-OHTU/projects/1)
