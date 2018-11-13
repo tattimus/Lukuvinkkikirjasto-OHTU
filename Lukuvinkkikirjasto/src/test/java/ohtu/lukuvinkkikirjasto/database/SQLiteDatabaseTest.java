@@ -41,4 +41,13 @@ public class SQLiteDatabaseTest {
             assertTrue(resultSet.next());
         }
     }
+    
+    @Test
+    public void testDatabaseEmptyInitially() throws SQLException {
+        try (Connection conn = sqliteDatabase.getConnection()) {
+            ResultSet resultSet = conn.prepareStatement("SELECT name FROM sqlite_master WHERE type='table'").executeQuery();
+            
+            assertFalse(resultSet.next());
+        }
+    }
 }
