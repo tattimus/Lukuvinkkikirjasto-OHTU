@@ -5,12 +5,33 @@
  */
 package ohtu.lukuvinkkikirjasto.vinkki;
 
+import ohtu.lukuvinkkikirjasto.dao.ObjectWithID;
+
 /**
  *
  * @author y50u
  */
-public class VinkkiClass implements Vinkki {
+public class VinkkiClass implements Vinkki, ObjectWithID {
+    public VinkkiClass(int id, String otsikko, String kommentti) {
+        this.id = id;
+        this.otsikko = otsikko;
+        this.kommentti = kommentti;
+    }
+    private int id;
+    
+    private String otsikko;
+    private String kommentti;
+    
+    @Override
+    public void setID(int id) {
+        this.id = id;
+    }
 
+    @Override
+    public int getID() {
+        return id;
+    }
+    
     @Override
     public String getOtsikko() {
         return otsikko;
@@ -30,6 +51,5 @@ public class VinkkiClass implements Vinkki {
     public void setKommentti(String kommentti) {
         this.kommentti = kommentti;
     }
-    private String otsikko;
-    private String kommentti;
+
 }
