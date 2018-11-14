@@ -22,7 +22,7 @@ public class VinkkiClassTest {
 
     @Before
     public void setUp() {
-        vinkki = new VinkkiClass();
+        vinkki = new VinkkiClass(0, null, null);
     }
 
     @Test
