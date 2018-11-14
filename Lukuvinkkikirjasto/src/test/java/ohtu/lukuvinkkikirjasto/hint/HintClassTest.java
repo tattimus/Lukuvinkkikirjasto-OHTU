@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ohtu.lukuvinkkikirjasto.vinkki;
+package ohtu.lukuvinkkikirjasto.hint;
 
+import ohtu.lukuvinkkikirjasto.hint.HintClass;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,24 +17,24 @@ import static org.junit.Assert.*;
  *
  * @author y50u
  */
-public class VinkkiClassTest {
+public class HintClassTest {
 
-    private VinkkiClass vinkki;
+    private HintClass hint;
 
     @Before
     public void setUp() {
-        vinkki = new VinkkiClass();
+        hint = new HintClass();
     }
 
     @Test
-    public void vinkkiSetOtsikko() {
-        vinkki.setOtsikko("otsikko");
-        assertEquals(vinkki.getOtsikko(), "otsikko");
+    public void vinkkiSetTitle() {
+        hint.setTitle("title");
+        assertEquals(hint.getTitle(), "title");
     }
     @Test
-    public void vinkkiSetKommentti() {
-        vinkki.setKommentti("kommentti");
-        assertEquals(vinkki.getKommentti(), "kommentti");
+    public void vinkkiSetComment() {
+        hint.setComment("comment");
+        assertEquals(hint.getComment(), "comment");
     }
 
 }
