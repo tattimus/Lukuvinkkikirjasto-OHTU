@@ -19,15 +19,15 @@ import static org.junit.Assert.*;
  *
  * @author jaakko
  */
-public class HintDAOTest {
+public class SQLHintDAOTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
     
-    private HintDAO vinkkiDao;
+    private SQLHintDAO vinkkiDao;
     
     @Before
     public void setup() throws Exception {
-        vinkkiDao = new HintDAO(new SQLiteDatabase(folder.newFile().getAbsolutePath()));
+        vinkkiDao = new SQLHintDAO(new SQLiteDatabase(folder.newFile().getAbsolutePath()));
     }
     
     @Test
