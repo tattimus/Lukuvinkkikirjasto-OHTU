@@ -12,23 +12,24 @@ import ohtu.lukuvinkkikirjasto.dao.ObjectWithID;
  * @author y50u
  */
 public class VinkkiClass implements Vinkki, ObjectWithID {
-    public VinkkiClass(int id, String otsikko, String kommentti) {
+    public VinkkiClass(Integer id, String otsikko, String kommentti) {
         this.id = id;
         this.otsikko = otsikko;
         this.kommentti = kommentti;
     }
-    private int id;
+    
+    private Integer id;
     
     private String otsikko;
     private String kommentti;
     
     @Override
-    public void setID(int id) {
+    public void setID(Integer id) {
         this.id = id;
     }
 
     @Override
-    public int getID() {
+    public Integer getID() {
         return id;
     }
     

@@ -10,6 +10,6 @@ package ohtu.lukuvinkkikirjasto.dao;
  * @author jaakko
  */
 public interface ObjectWithID {
-    void setID(int id);
-    int getID();
+    void setID(Integer id);
+    Integer getID();
 }
