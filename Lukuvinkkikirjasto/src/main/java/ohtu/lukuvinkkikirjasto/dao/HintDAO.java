@@ -13,16 +13,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import ohtu.lukuvinkkikirjasto.database.Database;
-import ohtu.lukuvinkkikirjasto.vinkki.VinkkiClass;
+import ohtu.lukuvinkkikirjasto.hint.HintClass;
 
 /**
  *
  * @author jaakko
  */
-public class VinkkiDAO implements DAO<VinkkiClass> {
+public class HintDAO implements DAO<HintClass> {
     private Database database;
     
-    public VinkkiDAO(Database database) throws Exception {
+    public HintDAO(Database database) throws Exception {
         this.database = database;
         
         try (Connection connection = this.database.getConnection()) {
@@ -34,11 +34,11 @@ public class VinkkiDAO implements DAO<VinkkiClass> {
     }
  
     @Override
-    public int insert(VinkkiClass object) throws Exception {
+    public int insert(HintClass object) throws Exception {
         try (Connection connection = database.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement("INSERT INTO Vinkki (otsikko, kommentti) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
-            stmt.setString(1, object.getOtsikko());            
-            stmt.setString(2, object.getKommentti());
+            stmt.setString(1, object.getTitle());            
+            stmt.setString(2, object.getComment());
             
             stmt.execute();
             
@@ -62,7 +62,7 @@ public class VinkkiDAO implements DAO<VinkkiClass> {
     }
 
     @Override
-    public VinkkiClass findOne(int id) throws Exception {
+    public HintClass findOne(int id) throws Exception {
         try (Connection connection = database.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement("SELECT id, otsikko, kommentti FROM Vinkki WHERE id = ?");
             stmt.setInt(1, id);
@@ -70,7 +70,7 @@ public class VinkkiDAO implements DAO<VinkkiClass> {
             ResultSet rs = stmt.executeQuery();
             
             if (rs.next()) {
-                return new VinkkiClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"));
+                return new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"));
             } else {
                 return null;
             }
@@ -78,15 +78,15 @@ public class VinkkiDAO implements DAO<VinkkiClass> {
     }
 
     @Override
-    public List<VinkkiClass> findAll() throws Exception {
+    public List<HintClass> findAll() throws Exception {
         try (Connection connection = database.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement("SELECT id, otsikko, kommentti FROM Vinkki");
 
             ResultSet rs = stmt.executeQuery();
             
-            List<VinkkiClass> results = new ArrayList<>();
+            List<HintClass> results = new ArrayList<>();
             while (rs.next()) {
-                results.add(new VinkkiClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti")));
+                results.add(new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti")));
             }
             
             return results;

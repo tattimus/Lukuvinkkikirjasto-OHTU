@@ -7,7 +7,7 @@ package ohtu.lukuvinkkikirjasto.dao;
 
 import java.sql.SQLException;
 import ohtu.lukuvinkkikirjasto.database.SQLiteDatabase;
-import ohtu.lukuvinkkikirjasto.vinkki.VinkkiClass;
+import ohtu.lukuvinkkikirjasto.hint.HintClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,20 +19,20 @@ import static org.junit.Assert.*;
  *
  * @author jaakko
  */
-public class VinkkiDAOTest {
+public class HintDAOTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
     
-    private VinkkiDAO vinkkiDao;
+    private HintDAO vinkkiDao;
     
     @Before
     public void setup() throws Exception {
-        vinkkiDao = new VinkkiDAO(new SQLiteDatabase(folder.newFile().getAbsolutePath()));
+        vinkkiDao = new HintDAO(new SQLiteDatabase(folder.newFile().getAbsolutePath()));
     }
     
     @Test
     public void testInsert() throws Exception {
-        VinkkiClass vinkki = new VinkkiClass(null, "testi", "testi");
+        HintClass vinkki = new HintClass(null, "testi", "testi");
         vinkkiDao.insert(vinkki);
         
         assertFalse(vinkkiDao.findAll().isEmpty());
@@ -40,13 +40,13 @@ public class VinkkiDAOTest {
     
     @Test(expected = SQLException.class)
     public void testInsertWithNullValues() throws Exception {
-        VinkkiClass vinkki = new VinkkiClass(null, null, null);
+        HintClass vinkki = new HintClass(null, null, null);
         vinkkiDao.insert(vinkki);
     }
     
     @Test
     public void testDelete() throws Exception {
-        VinkkiClass vinkki = new VinkkiClass(null, "testi", "testi");
+        HintClass vinkki = new HintClass(null, "testi", "testi");
         int id = vinkkiDao.insert(vinkki);
         
         assertFalse(vinkkiDao.findAll().isEmpty());
@@ -58,9 +58,9 @@ public class VinkkiDAOTest {
     
     @Test
     public void testFindOne() throws Exception {
-        VinkkiClass vinkki = new VinkkiClass(null, "testi", "testi");
+        HintClass vinkki = new HintClass(null, "testi", "testi");
         int id = vinkkiDao.insert(vinkki);
         
-        assertEquals("testi", vinkkiDao.findOne(id).getOtsikko());
+        assertEquals("testi", vinkkiDao.findOne(id).getTitle());
     }
 }

@@ -3,20 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ohtu.lukuvinkkikirjasto.vinkki;
+package ohtu.lukuvinkkikirjasto.hint;
 
 /**
  *
  * @author y50u
  */
-public interface Vinkki {
+public interface Hint {
 
-    String getKommentti();
+    String getComment();
 
-    String getOtsikko();
+    String getTitle();
 
-    void setKommentti(String kommentti);
+    void setComment(String comment);
 
-    void setOtsikko(String otsikko);
+    void setTitle(String title);
     
 }
