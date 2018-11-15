@@ -13,3 +13,5 @@
 Backlog](https://github.com/tattimus/Lukuvinkkikirjasto-OHTU/projects/2)
 * [Sprint 
 backlog](https://github.com/tattimus/Lukuvinkkikirjasto-OHTU/projects/1)
+
+[![Build Status](https://travis-ci.org/tattimus/Lukuvinkkikirjasto-OHTU.svg?branch=master)](https://travis-ci.org/tattimus/Lukuvinkkikirjasto-OHTU)
