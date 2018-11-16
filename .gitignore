@@ -12,11 +12,15 @@ nbdist/
 ### Gradle ###
 .gradle
 /build/
+/gradle/
+/gradlew
+/nbproject/
+/gradle/wrapper
 
 # Ignore Gradle GUI config
 gradle-app.setting
 
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually 
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually
 ignored)
 !gradle-wrapper.jar
 
