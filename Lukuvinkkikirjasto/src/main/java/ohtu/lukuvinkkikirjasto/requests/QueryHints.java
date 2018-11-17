@@ -22,9 +22,8 @@ public class QueryHints implements QueryRequest {
     public ArrayList<Hint> getAllRequests() {
         ArrayList<Hint> hints = new ArrayList<>();
         try {
-            for (HintClass hc : hdao.findAll()){
-                Hint h = hc;
-                hints.add(h);
+            for (Hint hint : hdao.findAll()){
+                hints.add(hint);
             }
         } catch (Exception ex) {
         }
