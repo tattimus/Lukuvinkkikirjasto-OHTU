@@ -24,8 +24,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {        
-        Database database = new SQLiteDatabase(System.getProperty("user.dir")+".sqlite");
-        database.getConnection();
+        Database database = new SQLiteDatabase(System.getProperty("user.dir")+"/lukuvinkkikirjasto.db");
         HintDAO hdao = new SQLHintDAO(database);
         CreateRequest creator = new AddHintStub();
         QueryRequest querier = new QueryHints(hdao);
