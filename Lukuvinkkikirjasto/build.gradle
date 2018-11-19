@@ -14,6 +14,10 @@ if (!hasProperty('mainClass')) {
     ext.mainClass = 'ohtu.lukuvinkkikirjasto.Main'
 }
 
+project.ext {
+    cucumberVersion = '1.2.5'
+}
+
 repositories {
     mavenCentral()
     // You may define additional repositories, or even remove "mavenCentral()".
@@ -29,4 +33,7 @@ dependencies {
     // You can read more about how to add dependency here:
     //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
     testCompile group: 'junit', name: 'junit', version: '4.10'
+    
+    testCompile 'info.cukes:cucumber-java:' + cucumberVersion
+    testCompile 'info.cukes:cucumber-junit:' + cucumberVersion
 }
