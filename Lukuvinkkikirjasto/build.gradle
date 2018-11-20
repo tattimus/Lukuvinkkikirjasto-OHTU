@@ -1,4 +1,7 @@
 apply plugin: 'java'
+apply plugin: 'application'
+mainClassName = 'ohtu.lukuvinkkikirjasto.Main'
+
 
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -41,4 +44,8 @@ dependencies {
 test {
     testLogging.showStandardStreams = true
     systemProperties System.getProperties()
+}
+
+run {
+    standardInput = System.in
 }

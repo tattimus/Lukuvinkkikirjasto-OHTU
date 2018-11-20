@@ -34,3 +34,6 @@ ignored)
 **/build/
 
 # End of https://www.gitignore.io/api/gradle,netbeans
+
+## Database file
+lukuvinkkikirjasto.db
