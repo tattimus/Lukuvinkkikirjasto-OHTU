@@ -2,7 +2,7 @@
 
 Ryhmän nimi: *Ohjelmistontuottajat*
 
-* [Burndown-käyrä](/projectDocuments/burndown.png)
+* [Burndown-käyrä](/projectDocuments/BurnDownKäyrä.png)
 
 **Defenition of done:**
 * Ohjelmoitu
