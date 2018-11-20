@@ -2,12 +2,13 @@
 
 Ryhmän nimi: *Ohjelmistontuottajat*
 
+* [Burndown-käyrä](/projectDocuments/burndown.png)
+
 **Defenition of done:**
 * Ohjelmoitu
 * Testattu
 * Täyttää hyväksymäkriteerit
 * Integroitu osaksi tuotetta. 
-
 
 ## Backlogit
 
