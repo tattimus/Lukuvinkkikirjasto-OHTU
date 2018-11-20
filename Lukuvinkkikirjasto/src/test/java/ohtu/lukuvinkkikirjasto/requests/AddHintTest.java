@@ -5,9 +5,13 @@
  */
 package ohtu.lukuvinkkikirjasto.requests;
 
+import java.sql.SQLException;
+import ohtu.lukuvinkkikirjasto.actions.AddHint;
 import java.util.ArrayList;
 import java.util.List;
+import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
 import ohtu.lukuvinkkikirjasto.dao.HintDAO;
+import ohtu.lukuvinkkikirjasto.dao.MockHintDAO;
 import ohtu.lukuvinkkikirjasto.dao.SQLHintDAO;
 import ohtu.lukuvinkkikirjasto.database.Database;
 import ohtu.lukuvinkkikirjasto.database.SQLiteDatabase;
@@ -25,85 +29,23 @@ import static org.junit.Assert.*;
  * @author kape
  */
 public class AddHintTest {
-
     AddHint newHint;
-
-    HintDAO daoStub = new HintDAO() {
-        ArrayList<HintClass> hints = new ArrayList<>();
-        int id = 1;
-
-
-        public int insert(HintClass object) {
-            hints.add(object);
-            return this.id;
-        }
-
-        public List<HintClass> findAll() {
-
-            return hints;
-        }
-
-        @Override
-        public void delete(int id) throws Exception {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public HintClass findOne(int id) throws Exception {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-    };
-
-    public AddHintTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
+    HintDAO hintDao;
 
     @Before
     public void setUp() throws Exception {
-
-        this.newHint = new AddHint(daoStub);
+        hintDao = new MockHintDAO();
+        this.newHint = new AddHint(hintDao);
     }
-
-    @After
-    public void tearDown() {
-    }
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-
 
     @Test
-    public void HintCanBeAdded() throws Exception {
-        String s = newHint.createHint("myFirstHint", "Comment for MyFirstHint");
-        List<HintClass> hints = new ArrayList<>();
-        hints = daoStub.findAll();
-        assertEquals(1, hints.size());
-
+    public void hintCanBeAdded() throws Exception {
+        AsyncStubIO io = new AsyncStubIO();
+        io.pushString("otsikko");
+        io.pushString("kommentti");
+        
+        newHint.run(io);
+        
+        assertTrue(hintDao.findAll().stream().anyMatch(hint -> hint.getTitle().equals("otsikko") && hint.getComment().equals("kommentti")));
     }
-
-
-    @Test
-    public void StringReturnPrintsCorrect() {
-        String s = newHint.createHint("mySecondHint", "Comment for MySecondHint");
-        assertEquals("Hint mySecondHint with commment Comment for MySecondHint is created with id 1", s);
-
-    }
-            @Test
-    public void SeveralHintsCanBeAdded() throws Exception {
-        String s = newHint.createHint("myThirdHint", "Comment for MyThirdHint");
-        s = newHint.createHint("myFouthHint", "Comment for MyFourthHint");
-        List<HintClass> hints = new ArrayList<>();
-        hints = daoStub.findAll();
-        assertEquals(2, hints.size());
-
-    }
-
 }

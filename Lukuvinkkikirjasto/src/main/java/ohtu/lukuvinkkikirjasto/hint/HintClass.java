@@ -53,4 +53,8 @@ public class HintClass implements Hint, ObjectWithID {
         return id;
     }
     
+    @Override
+    public String toString() {
+        return "\tOtsikko: "+title+"\n\tKommentti: "+comment;
+    }
 }
