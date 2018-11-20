@@ -60,4 +60,7 @@ public class AsyncStubIO implements IO {
         hints.stream().map(h -> h.toString()).forEach(this::printLine);
     }
     
+    public List<String> getOutput() {
+        return output;
+    }
 }
