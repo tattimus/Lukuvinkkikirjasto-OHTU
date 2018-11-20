@@ -1,5 +1,7 @@
 # Lukuvinkkikirjasto-OHTU
 
+Ryhmän nimi: *Ohjelmistontuottajat*
+
 **Defenition of done:**
 * Ohjelmoitu
 * Testattu
