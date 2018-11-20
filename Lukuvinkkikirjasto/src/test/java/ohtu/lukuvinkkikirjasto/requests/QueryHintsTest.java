@@ -1,6 +1,6 @@
 
 
-package RequestsTest;
+package ohtu.lukuvinkkikirjasto.requests;
 
 import java.util.ArrayList;
 import java.util.Arrays;
