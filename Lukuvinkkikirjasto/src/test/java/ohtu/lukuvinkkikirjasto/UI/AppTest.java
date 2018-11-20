@@ -33,7 +33,7 @@ public class AppTest {
         app.start();
     }
     
-    @Test
+    @Test(timeout = 2000)
     public void appCanBeStopped() throws InterruptedException {
         io.pushInt(app.findAction("Lopeta"));
         
@@ -41,10 +41,28 @@ public class AppTest {
         app.join(500);
     }
 
+    @Test
+    public void invalidActionsShowErrorMessage() throws InterruptedException {
+        int action = 48932;
+        io.pushInt(action);
+        
+        wait(500);
+        
+        assertTrue(io.getOutput().contains("Virheellinen komento: "+action));
+    }
+    
     @After
     public void tearDown() throws InterruptedException {
         if (app.isAlive()) {
+            io.pushInt(app.findAction("Lopeta"));
             app.join();
+        }
+    }
+    
+    private void wait(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException ex) {
         }
     }
 }
