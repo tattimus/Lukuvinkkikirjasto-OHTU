@@ -28,9 +28,27 @@ public class SQLTagDAO implements TagDAO {
         
         try (Connection connection = this.database.getConnection()) {
             connection
-                .prepareStatement("CREATE TABLE IF NOT EXISTS Tagi (id INTEGER NOT NULL PRIMARY KEY, tagi TEXT NOT NULL)")
+                .prepareStatement("CREATE TABLE IF NOT EXISTS Tagi (id INTEGER NOT NULL PRIMARY KEY, tagi TEXT NOT NULL UNIQUE)")
                 .execute();
                 
+        }
+    }
+    
+    public Tag insertOrGet(Tag object) throws Exception {
+        try (Connection connection = database.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement("SELECT id, tagi FROM Tagi WHERE tagi = ?");
+            stmt.setString(1, object.getTag());            
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return new Tag(rs.getInt("id"), rs.getString("tagi"));
+            } else {
+                int id = insert(object);
+                object.setID(id);
+                
+                return object;
+            }
         }
     }
  
