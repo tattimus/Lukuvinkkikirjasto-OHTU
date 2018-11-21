@@ -63,4 +63,23 @@ public class SQLTagDAOTest {
         
         assertEquals("video", dao.findOne(id).getTag());
     }
+    
+    @Test(expected = SQLException.class)
+    public void testInsertSameTagTwiceThrowsError() throws Exception {
+        Tag tag1 = new Tag(null, "video");
+        Tag tag2 = new Tag(null, "video");
+        
+        dao.insert(tag1);
+        dao.insert(tag2);
+    }
+    
+    @Test
+    public void testInsertOrGetReturnsPreviouslyInserted() throws Exception {
+        Tag tag1 = new Tag(null, "video");
+        Tag tag2 = new Tag(null, "video");
+        
+        int id = dao.insertOrGet(tag1).getID();
+        
+        assertEquals(id, (int)dao.insertOrGet(tag2).getID());
+    }
 }
