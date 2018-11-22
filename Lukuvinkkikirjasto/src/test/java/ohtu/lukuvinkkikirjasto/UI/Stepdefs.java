@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
 import ohtu.lukuvinkkikirjasto.IO.StubIO;
 import ohtu.lukuvinkkikirjasto.dao.MockHintDAO;
-import ohtu.lukuvinkkikirjasto.requests.AddHint;
-import ohtu.lukuvinkkikirjasto.requests.QueryHints;
+import ohtu.lukuvinkkikirjasto.actions.AddHint;
+import ohtu.lukuvinkkikirjasto.actions.QueryHints;
 import static org.junit.Assert.*;
 
 public class Stepdefs {
@@ -17,16 +17,10 @@ public class Stepdefs {
     MockHintDAO mockDao = new MockHintDAO();
     App app;
     
-    Thread appThread;
-    
     @Given("^Ohjelma on käynnistetty$")
     public void ohjelma_on_käynnistetty() throws Throwable {
         app = new App(stubIO, new AddHint(mockDao), new QueryHints(mockDao));
-        
-        appThread = new Thread(() -> {
-            app.run();
-        });
-        appThread.start();
+        app.start();
     }
 
     @When("^Käyttäjä valitsee vinkin lisäämisen ja syöttää otsikoksi \"([^\"]*)\" ja kommentiksi \"([^\"]*)\"$")
@@ -45,10 +39,12 @@ public class Stepdefs {
         boolean added = mockDao.findAll().stream().anyMatch(hint -> hint.getTitle().equals(otsikko) && hint.getComment().equals(kommentti));
         
         assertTrue(added);
-        
-        //HACK: pysäytä sovellus
-        stubIO.pushInt(3);
-        appThread.join();
+    }
+    
+    @Given("^Ohjelma pysähtyy$")
+    public void ohjelma_pysähtyy() throws Throwable {
+        stubIO.pushInt(app.findAction("Lopeta"));
+        app.join(500);
     }
     
     private void wait(int millis) {

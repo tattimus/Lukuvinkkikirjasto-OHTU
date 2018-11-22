@@ -17,5 +17,7 @@ public interface IO {
     int readInt(String prompt);
     String readString(String prompt);  
     void printList(ArrayList<Hint> hints);
-    
+    default void printLine(Object object) {
+        printLine(object.toString());
+    }
 }
