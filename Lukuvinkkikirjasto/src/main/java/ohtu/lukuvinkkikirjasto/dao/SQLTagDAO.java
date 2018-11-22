@@ -34,6 +34,7 @@ public class SQLTagDAO implements TagDAO {
         }
     }
     
+    @Override
     public Tag insertOrGet(Tag object) throws Exception {
         try (Connection connection = database.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement("SELECT id, tagi FROM Tagi WHERE tagi = ?");

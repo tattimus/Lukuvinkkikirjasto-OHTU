@@ -67,4 +67,10 @@ public class StubIO implements IO {
         return this.listOutput;
     }
 
+    @Override
+    public String readList(String prompt) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
 }

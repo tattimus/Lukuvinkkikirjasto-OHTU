@@ -20,27 +20,46 @@ public class CommandLineIO implements IO {
     public CommandLineIO() {
         scanner = new Scanner(System.in);
     }
-@Override
+
+    @Override
     public void printLine(String printable) {
         System.out.println(printable);
     }
-@Override
+
+    @Override
     public int readInt(String prompt) {
         System.out.println(prompt);
         int i = scanner.nextInt();
         return i;
     }
-@Override
+
+    @Override
     public String readString(String prompt) {
         System.out.println(prompt);
         String s = scanner.next();
         return s;
     }
-    
+
     public void printList(ArrayList<Hint> hints) {
-        for(Hint h:hints) {
-            System.out.println(h.getTitle()+ " " + h.getComment());
+        for (Hint h : hints) {
+            System.out.println(h.getTitle() + " " + h.getComment());
         }
+    }
+
+    @Override
+    public String readList(String prompt) {
+        System.out.println(prompt);
+        String s="";
+        while(s.length()==0) {
+            s=scanner.nextLine();
+        }
+//        while (scanner.hasNext()) {
+//            String s = scanner.next();
+//            System.out.println(s);
+//            palautettava.add(s);
+//        }
+        return s;
+
     }
 
 }

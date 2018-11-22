@@ -37,7 +37,7 @@ public class MockHintDAO implements HintDAO {
     @Override
     public int insert(HintClass object) throws Exception {
         int id = idCounter++;
-        map.put(id, object);
+        map.put(id, new HintClass(id, object.getTitle(), object.getComment()));
         return id;
     }
     
