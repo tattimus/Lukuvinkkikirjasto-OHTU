@@ -12,8 +12,8 @@ nbdist/
 ### Gradle ###
 .gradle
 /build/
-/gradle/
-/gradlew
+/Lukuvinkkikirjasto/gradle/
+/Lukuvinkkikirjasto/gradlew
 /nbproject/
 /gradle/wrapper
 

@@ -25,4 +25,6 @@ public interface TagDAO extends DAO<Tag> {
 
     @Override
     int insert(Tag object) throws Exception;
+    
+    Tag insertOrGet(Tag object) throws Exception;
 }

@@ -15,7 +15,7 @@ import ohtu.lukuvinkkikirjasto.hint.Hint;
 public interface IO {
     void printLine(String printable);
     int readInt(String prompt);
-    String readString(String prompt);  
+    String readString(String prompt);
     void printList(ArrayList<Hint> hints);
     default void printLine(Object object) {
         printLine(object.toString());

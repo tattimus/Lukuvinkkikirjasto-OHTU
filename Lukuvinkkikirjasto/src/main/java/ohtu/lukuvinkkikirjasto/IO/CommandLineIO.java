@@ -16,30 +16,35 @@ import ohtu.lukuvinkkikirjasto.hint.Hint;
 public class CommandLineIO implements IO {
 
     private Scanner scanner;
+    private Scanner lineScanner;
 
     public CommandLineIO() {
         scanner = new Scanner(System.in);
+        lineScanner=new Scanner(System.in);
     }
-@Override
+
+    @Override
     public void printLine(String printable) {
         System.out.println(printable);
     }
-@Override
+
+    @Override
     public int readInt(String prompt) {
         System.out.println(prompt);
         int i = scanner.nextInt();
         return i;
     }
-@Override
+
+    @Override
     public String readString(String prompt) {
         System.out.println(prompt);
-        String s = scanner.next();
+        String s = lineScanner.nextLine();
         return s;
     }
-    
+
     public void printList(ArrayList<Hint> hints) {
-        for(Hint h:hints) {
-            System.out.println(h.getTitle()+ " " + h.getComment());
+        for (Hint h : hints) {
+            System.out.println(h.getTitle() + " " + h.getComment());
         }
     }
 
