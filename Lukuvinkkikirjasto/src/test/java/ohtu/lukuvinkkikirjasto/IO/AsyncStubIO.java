@@ -65,7 +65,7 @@ public class AsyncStubIO implements IO {
     }
 
     @Override
-    public String readList(String prompt) {
+    public String readLine(String prompt) {
         printLine(prompt);
         try {
             return stringQueue.take();

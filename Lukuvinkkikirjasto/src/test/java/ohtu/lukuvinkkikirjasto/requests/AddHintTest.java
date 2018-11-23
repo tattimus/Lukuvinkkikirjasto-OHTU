@@ -55,12 +55,11 @@ public class AddHintTest {
         AsyncStubIO io = new AsyncStubIO();
         io.pushString("otsikko");
         io.pushString("kommentti");
-        io.pushString("tagi");
+        io.pushString("");
 
         newHint.run(io);
 
         assertTrue(hintDao.findAll().stream().anyMatch(hint -> hint.getTitle().equals("otsikko") && hint.getComment().equals("kommentti")));
-        assertTrue(tagDAO.findAll().stream().anyMatch(tag -> tag.getTag().equals("tagi")));
     }
 
     @Test
@@ -71,7 +70,7 @@ public class AddHintTest {
         io.pushString("tagi, tagi2");
 
         newHint.run(io);
-
+        
         assertTrue(tagDAO.findAll().stream().allMatch(tag -> tag.getTag().equals("tagi") || tag.getTag().equals("tagi2")));
 
     }

@@ -16,9 +16,11 @@ import ohtu.lukuvinkkikirjasto.hint.Hint;
 public class CommandLineIO implements IO {
 
     private Scanner scanner;
+    private Scanner lineScanner;
 
     public CommandLineIO() {
         scanner = new Scanner(System.in);
+        lineScanner=new Scanner(System.in);
     }
 
     @Override
@@ -47,17 +49,9 @@ public class CommandLineIO implements IO {
     }
 
     @Override
-    public String readList(String prompt) {
+    public String readLine(String prompt) {
         System.out.println(prompt);
-        String s="";
-        while(s.length()==0) {
-            s=scanner.nextLine();
-        }
-//        while (scanner.hasNext()) {
-//            String s = scanner.next();
-//            System.out.println(s);
-//            palautettava.add(s);
-//        }
+        String s=lineScanner.nextLine();
         return s;
 
     }

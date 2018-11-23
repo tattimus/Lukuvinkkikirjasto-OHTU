@@ -29,11 +29,10 @@ public class AddHint extends Action {
     private HintClass hint;
     private TagHintAssociationTable tagHint;
 
-
     public AddHint(HintDAO hdao, TagDAO tdao, TagHintAssociationTable tagHint) {
         this.hdao = hdao;
         this.tdao = tdao;
-        this.tagHint=tagHint;
+        this.tagHint = tagHint;
 
     }
 
@@ -52,17 +51,17 @@ public class AddHint extends Action {
         try {
             String title = io.readString("Vinkin otsikko: ");
             String comment = io.readString("Vinkin kommentti: ");
-            String tagit = io.readList("Vinkin tagit(pilkulla eroteltuina) :");
+            String tagit = io.readLine("Vinkin tagit(pilkulla eroteltuina) :");
 
             HintClass hint = new HintClass(null, title, comment);
-            int hintId=hdao.insert(hint);
+            int hintId = hdao.insert(hint);
 
-            for (String newTag : tagit.split(", ")) {
-                
-                Tag t = tdao.insertOrGet(new Tag(null, newTag));
-                tagHint.associate(t, new HintClass(hintId, null, null));
-                
-                
+            if (tagit.length() > 0) {
+                for (String newT : tagit.split(",")) {
+                    String newTag= newT.trim();
+                    Tag t = tdao.insertOrGet(new Tag(null, newTag));
+                    tagHint.associate(t, new HintClass(hintId, null, null));
+                }
             }
 
             io.printLine("Lisätty vinkki \"" + hint.getTitle() + "\"");
