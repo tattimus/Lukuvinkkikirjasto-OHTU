@@ -38,7 +38,7 @@ public class CommandLineIO implements IO {
     @Override
     public String readString(String prompt) {
         System.out.println(prompt);
-        String s = scanner.next();
+        String s = lineScanner.nextLine();
         return s;
     }
 
@@ -46,14 +46,6 @@ public class CommandLineIO implements IO {
         for (Hint h : hints) {
             System.out.println(h.getTitle() + " " + h.getComment());
         }
-    }
-
-    @Override
-    public String readLine(String prompt) {
-        System.out.println(prompt);
-        String s=lineScanner.nextLine();
-        return s;
-
     }
 
 }

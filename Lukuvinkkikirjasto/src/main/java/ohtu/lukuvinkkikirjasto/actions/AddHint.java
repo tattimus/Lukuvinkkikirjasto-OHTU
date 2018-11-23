@@ -51,7 +51,7 @@ public class AddHint extends Action {
         try {
             String title = io.readString("Vinkin otsikko: ");
             String comment = io.readString("Vinkin kommentti: ");
-            String tagit = io.readLine("Vinkin tagit(pilkulla eroteltuina) :");
+            String tagit = io.readString("Vinkin tagit(pilkulla eroteltuina) :");
 
             HintClass hint = new HintClass(null, title, comment);
             int hintId = hdao.insert(hint);

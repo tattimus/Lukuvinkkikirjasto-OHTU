@@ -64,13 +64,4 @@ public class AsyncStubIO implements IO {
         return output;
     }
 
-    @Override
-    public String readLine(String prompt) {
-        printLine(prompt);
-        try {
-            return stringQueue.take();
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
 }
