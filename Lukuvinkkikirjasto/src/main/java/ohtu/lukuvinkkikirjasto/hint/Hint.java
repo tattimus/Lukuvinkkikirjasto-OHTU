@@ -19,4 +19,8 @@ public interface Hint {
 
     void setTitle(String title);
     
+    String getUrl();
+    
+    void setUrl(String url);
+    
 }
