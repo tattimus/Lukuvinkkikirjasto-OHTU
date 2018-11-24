@@ -27,7 +27,7 @@ public class SQLHintDAO implements HintDAO {
         
         try (Connection connection = this.database.getConnection()) {
             connection
-                .prepareStatement("CREATE TABLE IF NOT EXISTS Vinkki (id INTEGER NOT NULL PRIMARY KEY, otsikko TEXT NOT NULL, kommentti TEXT NOT NULL)")
+                .prepareStatement("CREATE TABLE IF NOT EXISTS Vinkki (id INTEGER NOT NULL PRIMARY KEY, otsikko TEXT NOT NULL, kommentti TEXT NOT NULL, url TEXT)")
                 .execute();
                 
         }
@@ -36,9 +36,12 @@ public class SQLHintDAO implements HintDAO {
     @Override
     public int insert(HintClass object) throws Exception {
         try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO Vinkki (otsikko, kommentti) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO Vinkki (otsikko, kommentti,url) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, object.getTitle());            
             stmt.setString(2, object.getComment());
+            if(object.getUrl()!=null){
+                stmt.setString(2, object.getUrl());
+            }
             
             stmt.execute();
             
