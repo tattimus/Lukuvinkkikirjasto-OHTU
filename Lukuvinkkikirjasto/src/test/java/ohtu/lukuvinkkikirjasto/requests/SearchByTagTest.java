@@ -28,6 +28,10 @@ public class SearchByTagTest {
     private TagHintAssociationTable asso;
     private SearchByTag sbt;
     
+    private HintClass hint1;
+    private HintClass hint2;
+    private HintClass hint3;
+    
     @Before
     public void setUp() throws Exception {
         dao = new MockHintDAO();
@@ -35,17 +39,46 @@ public class SearchByTagTest {
         asso = new MockTagHintAssociationTable();
         io = new AsyncStubIO();
         sbt = new SearchByTag(dao,tdao,asso);
+        
+        Tag kirja = new Tag(0,"kirja");
+        Tag classic = new Tag(1,"classic");
+        tdao.insertOrGet(kirja);
+        tdao.insertOrGet(classic);
+        
+        hint1 = new HintClass(0,"test testbok","testing material");
+        hint2 = new HintClass(1,"klassikko kirja","kuuluisa");
+        hint3 = new HintClass(2,"legandary pasta","yum");
+        dao.insert(hint1);
+        dao.insert(hint2);
+        dao.insert(hint2);
+        
+        asso.associate(kirja, hint1);
+        asso.associate(kirja, hint2);
+        asso.associate(classic, hint2);
+        asso.associate(classic, hint3);
     }
 
     @Test
-    public void findsCorrectTag() throws Exception {
-        Tag kirja = new Tag(1,"kirja");
-        HintClass hint1 = new HintClass(6,"test testbok", "testing material");
-        dao.insert(hint1);
-        asso.associate(kirja, hint1);
-        tdao.insertOrGet(kirja);
+    public void findsCorrectHintsWithTag() throws Exception {
         io.pushString("kirja");
         sbt.run(io);
-        assertTrue(io.getOutput().contains("Tagi: "+kirja.toString()));
+        assertTrue(io.getOutput().contains(hint1.toString()));
+        assertTrue(io.getOutput().contains(hint2.toString()));
     }
+    @Test
+    public void findsHintswithMultipleTags() throws Exception {
+        io.pushString("kirja");
+        sbt.run(io);
+        assertTrue(io.getOutput().contains(hint2.toString()));
+        io.pushString("classic");
+        sbt.run(io);
+        assertTrue(io.getOutput().contains(hint2.toString()));      
+    }
+    @Test
+    public void givesErrorwhenWrongTag() throws Exception{
+        io.pushString("bad");
+        sbt.run(io);
+        assertTrue(io.getOutput().contains("Tagilla ei löytynyt vinkkejä"));
+    }
+
 }
