@@ -46,7 +46,6 @@ public class SearchByTagTest {
         tdao.insertOrGet(kirja);
         io.pushString("kirja");
         sbt.run(io);
-        System.out.println(io.getOutput());
         assertTrue(io.getOutput().contains("Tagi: "+kirja.toString()));
     }
 }
