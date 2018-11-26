@@ -59,6 +59,7 @@ public class Stepdefs {
     @Then("^Kirjastoon on lisätty vinkki, jolla on otsikkona \"([^\"]*)\" ja kommenttina \"([^\"]*)\" ja ei tageja$")
     public void kirjastoon_on_lisatty_vinkki_jolla_on_otsikkona_ja_kommenttina_ilman_tageja(String otsikko, String kommentti) throws Throwable {
          Optional<HintClass> h=mockDao.findAll().stream().filter(hint -> hint.getTitle().equals(otsikko) && hint.getComment().equals(kommentti)).findAny();
+         assertTrue(stubIO.getOutput().contains("Lisätty vinkki \"" + otsikko + "\""));
          assertTrue(h.isPresent());
          assertTrue(connect.findAForB(h.get()).isEmpty());       
     }
@@ -67,9 +68,8 @@ public class Stepdefs {
     public void kirjastoon_on_lisätty_vinkki_jolla_on_otsikkona_ja_kommenttina_ja_tageina(String otsikko, String kommentti, String tagit) throws Throwable {
         Optional<HintClass> h=mockDao.findAll().stream().filter(hint -> hint.getTitle().equals(otsikko) && hint.getComment().equals(kommentti)).findAny();
         List<String> tags =extractTags(tagit);
-        System.out.println("tageja " + tags.size());
         List<Tag> savedTags=tagDAO.findAll().stream().filter(tag->tags.contains(tag.getTag())).distinct().collect(Collectors.toList());
-        System.out.println("tallennettu " + savedTags.size());
+        assertTrue(stubIO.getOutput().contains("Lisätty vinkki \"" + otsikko + "\""));
         assertTrue(h.isPresent());
         for(Tag t: savedTags) {
             assertTrue(connect.findBForA(t).stream().anyMatch(hint->hint.getID().equals(h.get().getID())));
