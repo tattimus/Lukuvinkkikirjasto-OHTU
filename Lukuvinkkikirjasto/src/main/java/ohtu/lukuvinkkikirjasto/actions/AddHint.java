@@ -51,27 +51,29 @@ public class AddHint extends Action {
         try {
             String title = io.readString("Vinkin otsikko: ");
             String comment = io.readString("Vinkin kommentti: ");
-            String tagit = io.readString("Vinkin tagit(pilkulla eroteltuina) :");
+            String tagit = io.readString("Vinkin tagit (pilkulla eroteltuina): ");
+            String url = io.readString("Vinkkiin liittyvä URL: ");
 
-            HintClass hint = new HintClass(null, title, comment);
+            HintClass hint = new HintClass(null, title, comment, url);
             int hintId = hdao.insert(hint);
+            hint.setID(hintId);
 
             if (tagit.length() > 0) {
                 for (String newT : tagit.split(",")) {
-                    String newTag= newT.trim();
+                    String newTag = newT.trim();
                     Tag t = tdao.insertOrGet(new Tag(null, newTag));
-                    tagHint.associate(t, new HintClass(hintId, null, null));
+                    tagHint.associate(t, hint);
                 }
             }
-            if(hint.getUrl()!=null){
-                Tag t;
-                if(hint.getUrl().contains("youtube.com")){
-                      t = tdao.insertOrGet(new Tag(null, "video"));
-                      tagHint.associate(t, new HintClass(hintId, null, null));
+            
+            if (hint.getUrl() != null && !hint.getUrl().isEmpty()) {
+                if (hint.getUrl().contains("youtube.com")) {
+                      Tag t = tdao.insertOrGet(new Tag(null, "video"));
+                      tagHint.associate(t, hint);
                 }
-                if(hint.getUrl().contains("dl.acm.org")){
-                      t = tdao.insertOrGet(new Tag(null, "kirja"));
-                      tagHint.associate(t, new HintClass(hintId, null, null));
+                if (hint.getUrl().contains("dl.acm.org")) {
+                      Tag t = tdao.insertOrGet(new Tag(null, "kirja"));
+                      tagHint.associate(t, hint);
                 }
                    
             }

@@ -39,7 +39,7 @@ public class SQLTagHintAssociationTableTest {
     
     @Test
     public void testAssociation() throws Exception {
-        HintClass hint = new HintClass(null, "testi", "testi");
+        HintClass hint = new HintClass(null, "testi", "testi", "www.example.com");
         hint.setID(hintDao.insert(hint));
         
         Tag tag = new Tag(null, "testi");
@@ -53,7 +53,7 @@ public class SQLTagHintAssociationTableTest {
     
     @Test
     public void testUnassociation() throws Exception {
-        HintClass hint = new HintClass(null, "testi", "testi");
+        HintClass hint = new HintClass(null, "testi", "testi", "www.example.com");
         hint.setID(hintDao.insert(hint));
         
         Tag tag = new Tag(null, "testi");

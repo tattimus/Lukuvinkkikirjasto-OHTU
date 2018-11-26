@@ -7,8 +7,10 @@ package ohtu.lukuvinkkikirjasto.IO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ohtu.lukuvinkkikirjasto.IO.IO;
@@ -20,14 +22,14 @@ import ohtu.lukuvinkkikirjasto.hint.Hint;
  */
 public class AsyncStubIO implements IO {
     private List<String> output = new ArrayList<>();
-    private BlockingQueue<String> stringQueue = new LinkedBlockingQueue();
-    private BlockingQueue<Integer> intQueue = new LinkedBlockingQueue();
+    private BlockingQueue<Optional<String>> stringQueue = new LinkedBlockingQueue();
+    private BlockingQueue<Optional<Integer>> intQueue = new LinkedBlockingQueue();
     
     public void pushString(String string) throws InterruptedException {
-        stringQueue.put(string);
+        stringQueue.put(Optional.ofNullable(string));
     }
     public void pushInt(int i) throws InterruptedException {
-        intQueue.put(i);
+        intQueue.put(Optional.ofNullable(i));
     }
     
     @Override
@@ -39,7 +41,7 @@ public class AsyncStubIO implements IO {
     public int readInt(String prompt) {
         printLine(prompt);
         try {
-            return intQueue.take();
+            return intQueue.poll(5, TimeUnit.MINUTES).orElse(null);
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }
@@ -49,7 +51,7 @@ public class AsyncStubIO implements IO {
     public String readString(String prompt) {
         printLine(prompt);
         try {
-            return stringQueue.take();
+            return stringQueue.poll(5, TimeUnit.MINUTES).orElse(null);
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }

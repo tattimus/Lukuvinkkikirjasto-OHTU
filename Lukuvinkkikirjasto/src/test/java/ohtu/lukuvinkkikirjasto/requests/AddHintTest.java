@@ -56,6 +56,7 @@ public class AddHintTest {
         io.pushString("otsikko");
         io.pushString("kommentti");
         io.pushString("");
+        io.pushString(null);
 
         newHint.run(io);
 
@@ -68,6 +69,7 @@ public class AddHintTest {
         io.pushString("otsikko");
         io.pushString("kommentti");
         io.pushString("tagi, tagi2");
+        io.pushString(null);
 
         newHint.run(io);
         
@@ -81,12 +83,14 @@ public class AddHintTest {
         io.pushString("otsikko");
         io.pushString("kommentti");
         io.pushString("tagi, tagi2");
+        io.pushString(null);
 
         newHint.run(io);
 
         io.pushString("toinen");
         io.pushString("toinen kommentti");
         io.pushString("tagi, tagi4");
+        io.pushString(null);
 
         newHint.run(io);
         ArrayList<HintClass> hints = new ArrayList<>(hintDao.findAll());

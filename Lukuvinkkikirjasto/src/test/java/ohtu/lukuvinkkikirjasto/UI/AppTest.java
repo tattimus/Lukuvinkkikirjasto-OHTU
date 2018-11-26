@@ -8,7 +8,6 @@ package ohtu.lukuvinkkikirjasto.UI;
 import java.util.ArrayList;
 import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
 import ohtu.lukuvinkkikirjasto.UI.App;
-import ohtu.lukuvinkkikirjasto.IO.StubIO;
 import ohtu.lukuvinkkikirjasto.hint.Hint;
 import ohtu.lukuvinkkikirjasto.hint.HintClass;
 import org.junit.After;

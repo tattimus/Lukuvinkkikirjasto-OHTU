@@ -23,7 +23,7 @@ public class HintClassTest {
 
     @Before
     public void setUp() {
-        hint = new HintClass(null, null, null);
+        hint = new HintClass(null, null, null, null);
     }
 
     @Test

@@ -27,10 +27,11 @@ public class HintClass implements Hint, ObjectWithID {
         this.url = url;
     }
 
-    public HintClass(Integer id, String title, String comment) {
+    public HintClass(Integer id, String title, String comment, String url) {
         this.id = id;
         this.title = title;
         this.comment = comment;
+        this.url = url;
     }
 
     @Override
