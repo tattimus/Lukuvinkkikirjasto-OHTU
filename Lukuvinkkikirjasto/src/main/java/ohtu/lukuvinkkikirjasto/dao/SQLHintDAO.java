@@ -72,7 +72,7 @@ public class SQLHintDAO implements HintDAO {
             ResultSet rs = stmt.executeQuery();
             
             if (rs.next()) {
-                return new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"));
+                return new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"), rs.getString("url"));
             } else {
                 return null;
             }
@@ -88,7 +88,7 @@ public class SQLHintDAO implements HintDAO {
             
             List<HintClass> results = new ArrayList<>();
             while (rs.next()) {
-                results.add(new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti")));
+                results.add(new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"), rs.getString("url")));
             }
             
             return results;
