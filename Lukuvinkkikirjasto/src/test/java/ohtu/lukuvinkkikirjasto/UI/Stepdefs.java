@@ -9,6 +9,7 @@ import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
 import ohtu.lukuvinkkikirjasto.dao.MockHintDAO;
 import ohtu.lukuvinkkikirjasto.actions.AddHint;
 import ohtu.lukuvinkkikirjasto.actions.QueryHints;
+import ohtu.lukuvinkkikirjasto.actions.SearchByTag;
 import ohtu.lukuvinkkikirjasto.dao.MockTagDAO;
 import ohtu.lukuvinkkikirjasto.dao.MockTagHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.dao.TagDAO;
@@ -25,6 +26,7 @@ public class Stepdefs {
     
     AddHint addHint;
     QueryHints queryHints;
+    SearchByTag searchTag;
     
     App app;
 
@@ -32,7 +34,8 @@ public class Stepdefs {
     public void ohjelma_on_käynnistetty() throws Throwable {
         addHint = new AddHint(mockDao, tagDAO, connect);
         queryHints = new QueryHints(mockDao);
-        app = new App(stubIO, addHint, queryHints);
+        searchTag = new SearchByTag(mockDao,tagDAO,connect);
+        app = new App(stubIO, addHint, queryHints,searchTag);
         app.start();
     }
 
@@ -80,6 +83,29 @@ public class Stepdefs {
         stubIO.pushInt(app.findAction("Lopeta"));
         app.join(500);
     }
+    
+    
+    @Then("^Käyttäjä valitsee tagilla hakemisen ja antaa tagin \"([^\"]*)\"$")
+    public void käyttäjä_valitsee_tagilla_hakemisen_ja_antaa_tagin(String tag) throws Throwable {
+        stubIO.pushInt(app.findAction(searchTag.getHint()));
+        wait(500);
+        stubIO.pushString(tag);
+        wait(500);
+    }
+    
+    
+    @Given("^Tietokantaan on tallennettu vinkki otsikkolla \"([^\"]*)\", kuvauksella \"([^\"]*)\" ja tagilla \"([^\"]*)\"$")
+    public void tietokantaa_on_tallennettu_vinkki_otsikkolla_kuvauksella_tagilla(String otsikko, String kuvaus, String tag) throws Throwable {
+        stubIO.pushInt(app.findAction(addHint.getHint()));
+        wait(500);
+        stubIO.pushString(otsikko);
+        stubIO.pushString(kuvaus);
+        stubIO.pushString(tag);
+        stubIO.pushString(null);
+        wait(500);
+    }
+
+
 
     private void wait(int millis) {
         try {
