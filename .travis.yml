@@ -7,3 +7,11 @@ script:
   - gradle jacocoTestReport
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+
+deploy:
+  provider: releases
+  api_key: $GH_OAT
+  file: Lukuvinkkikirjasto.jar
+  skip_cleanup: true
+  on:
+    tags: true
