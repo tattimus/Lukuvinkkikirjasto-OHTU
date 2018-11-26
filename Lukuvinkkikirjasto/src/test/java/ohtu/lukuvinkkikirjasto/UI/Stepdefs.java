@@ -85,7 +85,7 @@ public class Stepdefs {
     }
     
     
-    @Then("^Käyttäjä valitsee tagilla hakemisen ja antaa tagin \"([^\"]*)\"$")
+    @When("^Käyttäjä valitsee tagilla hakemisen ja antaa tagin \"([^\"]*)\"$")
     public void käyttäjä_valitsee_tagilla_hakemisen_ja_antaa_tagin(String tag) throws Throwable {
         stubIO.pushInt(app.findAction(searchTag.getHint()));
         wait(500);
@@ -102,6 +102,13 @@ public class Stepdefs {
         stubIO.pushString(kuvaus);
         stubIO.pushString(tag);
         stubIO.pushString(null);
+        wait(500);
+    }
+    
+    
+    @When("^Käyttäjä valitsee vinkkien listauksen$")
+    public void käyttäjä_valitsee_vinkkien_listauksen() throws Throwable {
+        stubIO.pushInt(app.findAction(queryHints.getHint()));
         wait(500);
     }
 
