@@ -12,17 +12,27 @@ import ohtu.lukuvinkkikirjasto.dao.ObjectWithID;
  * @author y50u
  */
 public class HintClass implements Hint, ObjectWithID {
+
     private Integer id;
-    
+
     private String title;
     private String comment;
-    
+    private String url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public HintClass(Integer id, String title, String comment) {
         this.id = id;
         this.title = title;
         this.comment = comment;
     }
-    
+
     @Override
     public String getTitle() {
         return title;
@@ -52,9 +62,9 @@ public class HintClass implements Hint, ObjectWithID {
     public Integer getID() {
         return id;
     }
-    
+
     @Override
     public String toString() {
-        return "\tOtsikko: "+title+"\n\tKommentti: "+comment;
+        return "\tOtsikko: " + title + "\n\tKommentti: " + comment;
     }
 }
