@@ -66,7 +66,7 @@ public class SQLHintDAO implements HintDAO {
     @Override
     public HintClass findOne(int id) throws Exception {
         try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT id, otsikko, kommentti FROM Vinkki WHERE id = ?");
+            PreparedStatement stmt = connection.prepareStatement("SELECT id, otsikko, kommentti, url FROM Vinkki WHERE id = ?");
             stmt.setInt(1, id);
             
             ResultSet rs = stmt.executeQuery();
@@ -82,7 +82,7 @@ public class SQLHintDAO implements HintDAO {
     @Override
     public List<HintClass> findAll() throws Exception {
         try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT id, otsikko, kommentti FROM Vinkki");
+            PreparedStatement stmt = connection.prepareStatement("SELECT id, otsikko, kommentti, url FROM Vinkki");
 
             ResultSet rs = stmt.executeQuery();
             
