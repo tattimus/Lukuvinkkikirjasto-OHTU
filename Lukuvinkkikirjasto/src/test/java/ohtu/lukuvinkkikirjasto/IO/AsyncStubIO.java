@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ohtu.lukuvinkkikirjasto.IO.IO;
@@ -40,7 +41,7 @@ public class AsyncStubIO implements IO {
     public int readInt(String prompt) {
         printLine(prompt);
         try {
-            return intQueue.take().orElse(null);
+            return intQueue.poll(5, TimeUnit.MINUTES).orElse(null);
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }
@@ -50,7 +51,7 @@ public class AsyncStubIO implements IO {
     public String readString(String prompt) {
         printLine(prompt);
         try {
-            return stringQueue.take().orElse(null);
+            return stringQueue.poll(5, TimeUnit.MINUTES).orElse(null);
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }
