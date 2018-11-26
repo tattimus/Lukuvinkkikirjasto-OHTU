@@ -32,7 +32,7 @@ public class SQLHintDAOTest {
     
     @Test
     public void testInsert() throws Exception {
-        HintClass vinkki = new HintClass(null, "testi", "testi");
+        HintClass vinkki = new HintClass(null, "testi", "testi", "www.example.com");
         vinkkiDao.insert(vinkki);
         
         assertFalse(vinkkiDao.findAll().isEmpty());
@@ -40,13 +40,13 @@ public class SQLHintDAOTest {
     
     @Test(expected = SQLException.class)
     public void testInsertWithNullValues() throws Exception {
-        HintClass vinkki = new HintClass(null, null, null);
+        HintClass vinkki = new HintClass(null, null, null, null);
         vinkkiDao.insert(vinkki);
     }
     
     @Test
     public void testDelete() throws Exception {
-        HintClass vinkki = new HintClass(null, "testi", "testi");
+        HintClass vinkki = new HintClass(null, "testi", "testi", "www.example.com");
         int id = vinkkiDao.insert(vinkki);
         
         assertFalse(vinkkiDao.findAll().isEmpty());
@@ -58,7 +58,7 @@ public class SQLHintDAOTest {
     
     @Test
     public void testFindOne() throws Exception {
-        HintClass vinkki = new HintClass(null, "testi", "testi");
+        HintClass vinkki = new HintClass(null, "testi", "testi", "www.example.com");
         int id = vinkkiDao.insert(vinkki);
         
         assertEquals("testi", vinkkiDao.findOne(id).getTitle());

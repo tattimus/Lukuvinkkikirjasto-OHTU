@@ -66,13 +66,13 @@ public class SQLHintDAO implements HintDAO {
     @Override
     public HintClass findOne(int id) throws Exception {
         try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT id, otsikko, kommentti FROM Vinkki WHERE id = ?");
+            PreparedStatement stmt = connection.prepareStatement("SELECT id, otsikko, kommentti, url FROM Vinkki WHERE id = ?");
             stmt.setInt(1, id);
             
             ResultSet rs = stmt.executeQuery();
             
             if (rs.next()) {
-                return new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"));
+                return new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"), rs.getString("url"));
             } else {
                 return null;
             }
@@ -82,13 +82,13 @@ public class SQLHintDAO implements HintDAO {
     @Override
     public List<HintClass> findAll() throws Exception {
         try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT id, otsikko, kommentti FROM Vinkki");
+            PreparedStatement stmt = connection.prepareStatement("SELECT id, otsikko, kommentti, url FROM Vinkki");
 
             ResultSet rs = stmt.executeQuery();
             
             List<HintClass> results = new ArrayList<>();
             while (rs.next()) {
-                results.add(new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti")));
+                results.add(new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"), rs.getString("url")));
             }
             
             return results;

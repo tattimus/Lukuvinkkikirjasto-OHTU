@@ -45,9 +45,9 @@ public class SearchByTagTest {
         tdao.insertOrGet(kirja);
         tdao.insertOrGet(classic);
         
-        hint1 = new HintClass(0,"test testbok","testing material");
-        hint2 = new HintClass(1,"klassikko kirja","kuuluisa");
-        hint3 = new HintClass(2,"legandary pasta","yum");
+        hint1 = new HintClass(0,"test testbok","testing material", "www.example.com");
+        hint2 = new HintClass(1,"klassikko kirja","kuuluisa", "www.example.com");
+        hint3 = new HintClass(2,"legandary pasta","yum", "www.example.com");
         dao.insert(hint1);
         dao.insert(hint2);
         dao.insert(hint2);
