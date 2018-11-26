@@ -6,7 +6,6 @@ import cucumber.api.java.en.When;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
-import ohtu.lukuvinkkikirjasto.IO.StubIO;
 import ohtu.lukuvinkkikirjasto.dao.MockHintDAO;
 import ohtu.lukuvinkkikirjasto.actions.AddHint;
 import ohtu.lukuvinkkikirjasto.actions.QueryHints;
