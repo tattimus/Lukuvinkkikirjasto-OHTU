@@ -63,6 +63,18 @@ public class AddHint extends Action {
                     tagHint.associate(t, new HintClass(hintId, null, null));
                 }
             }
+            if(hint.getUrl()!=null){
+                Tag t;
+                if(hint.getUrl().contains("youtube.com")){
+                      t = tdao.insertOrGet(new Tag(null, "video"));
+                      tagHint.associate(t, new HintClass(hintId, null, null));
+                }
+                if(hint.getUrl().contains("dl.acm.org")){
+                      t = tdao.insertOrGet(new Tag(null, "kirja"));
+                      tagHint.associate(t, new HintClass(hintId, null, null));
+                }
+                   
+            }
 
             io.printLine("Lisätty vinkki \"" + hint.getTitle() + "\"");
         } catch (Exception ex) {
