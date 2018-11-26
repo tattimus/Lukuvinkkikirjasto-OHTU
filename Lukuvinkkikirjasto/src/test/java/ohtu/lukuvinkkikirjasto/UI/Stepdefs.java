@@ -6,7 +6,6 @@ import cucumber.api.java.en.When;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
-import ohtu.lukuvinkkikirjasto.IO.StubIO;
 import ohtu.lukuvinkkikirjasto.dao.MockHintDAO;
 import ohtu.lukuvinkkikirjasto.actions.AddHint;
 import ohtu.lukuvinkkikirjasto.actions.QueryHints;
@@ -20,27 +19,33 @@ public class Stepdefs {
 
     AsyncStubIO stubIO = new AsyncStubIO();
     MockHintDAO mockDao = new MockHintDAO();
-    MockTagDAO tagDAO=new MockTagDAO();
+    MockTagDAO tagDAO = new MockTagDAO();
 
-    MockTagHintAssociationTable connect=new MockTagHintAssociationTable();
- 
+    MockTagHintAssociationTable connect = new MockTagHintAssociationTable();
+    
+    AddHint addHint;
+    QueryHints queryHints;
+    
     App app;
 
     @Given("^Ohjelma on käynnistetty$")
     public void ohjelma_on_käynnistetty() throws Throwable {
-        app = new App(stubIO, new AddHint(mockDao, tagDAO, connect), new QueryHints(mockDao));
+        addHint = new AddHint(mockDao, tagDAO, connect);
+        queryHints = new QueryHints(mockDao);
+        app = new App(stubIO, addHint, queryHints);
         app.start();
     }
 
-    @When("^Käyttäjä valitsee vinkin lisäämisen ja syöttää otsikoksi \"([^\"]*)\" ja kommentiksi \"([^\"]*)\" ja tageiksi \"([^\"]*)\"$")
-    public void käyttäjä_valitsee_vinkin_lisäämisen_ja_syöttää_otsikoksi_ja_kommentiksi(String otsikko, String kommentti, String tagit) throws Throwable {
+    @When("^Käyttäjä valitsee vinkin lisäämisen ja syöttää otsikoksi \"([^\"]*)\" ja kommentiksi \"([^\"]*)\" ja jättää tagit ja URLin tyhjäksi$")
+    public void käyttäjä_valitsee_vinkin_lisäämisen_ja_syöttää_otsikoksi_ja_kommentiksi(String otsikko, String kommentti) throws Throwable {
         //Valitse vinkin lisääminen
-        stubIO.pushInt(1);
+        stubIO.pushInt(app.findAction(addHint.getHint()));
         wait(500);
         //Syötä otsikko ja kommentti
         stubIO.pushString(otsikko);
         stubIO.pushString(kommentti);
-        stubIO.pushString(tagit);
+        stubIO.pushString("\n"); //ei tageja
+        stubIO.pushString("\n"); //ei URLia
         wait(500);
     }
 
@@ -50,6 +55,25 @@ public class Stepdefs {
 
         assertTrue(added);
     }
+    
+    @When("^Käyttäjä valitsee vinkin lisäämisen ja jättää otsikon tyhjäksi ja jättää kommentin tyhjäksi ja jättää tagit tyhjäksi ja jättää URLin tyhjäksi$")
+    public void käyttäjä_valitsee_vinkin_lisäämisen_ja_jättää_otsikon_tyhjäksi_ja_jättää_kommentin_tyhjäksi_ja_jättää_tagit_tyhjäksi_ja_jättää_URLin_tyhjäksi() throws Throwable {
+        //Valitse vinkin lisääminen
+        stubIO.pushInt(app.findAction(addHint.getHint()));
+        wait(500);
+        //Jätä kaikki kentät tyhjiksi
+        stubIO.pushString(null);
+        stubIO.pushString(null);
+        stubIO.pushString(null);
+        stubIO.pushString(null);
+        wait(500);
+    }
+
+    @Then("^Ohjelma tulostaa \"([^\"]*)\"$")
+    public void ohjelma_tulostaa(String output) throws Throwable {
+        assertTrue(stubIO.getOutput().stream().filter(line -> line.contains(output)).findAny().isPresent());
+    }
+
 
     @Given("^Ohjelma pysähtyy$")
     public void ohjelma_pysähtyy() throws Throwable {
