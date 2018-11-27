@@ -63,4 +63,17 @@ public class SQLHintDAOTest {
         
         assertEquals("testi", vinkkiDao.findOne(id).getTitle());
     }
+    
+    @Test
+    public void testUpdate() throws Exception {
+        HintClass vinkki = new HintClass(null, "testi", "testi", "www.example.com");
+        vinkki.setID(vinkkiDao.insert(vinkki));
+        
+        assertEquals("testi", vinkkiDao.findOne(vinkki.getID()).getTitle());
+        
+        vinkki.setTitle("otsikko");
+        vinkkiDao.update(vinkki);
+        
+        assertEquals("otsikko", vinkkiDao.findOne(vinkki.getID()).getTitle());
+    }
 }

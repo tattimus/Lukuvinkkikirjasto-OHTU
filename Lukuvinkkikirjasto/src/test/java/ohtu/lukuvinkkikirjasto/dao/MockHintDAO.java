@@ -40,5 +40,10 @@ public class MockHintDAO implements HintDAO {
         map.put(id, new HintClass(id, object.getTitle(), object.getComment(), object.getUrl()));
         return id;
     }
+
+    @Override
+    public void update(HintClass object) throws Exception {
+        map.put(object.getID(), object);
+    }
     
 }
