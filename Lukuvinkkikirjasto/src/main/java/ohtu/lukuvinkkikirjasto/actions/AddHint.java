@@ -61,7 +61,7 @@ public class AddHint extends Action {
             
             List<String> tags = new ArrayList<>();
 
-            Arrays.stream(tagit.split(",")).forEach(tags::add);
+            Arrays.stream(tagit.split(",")).filter(s -> !s.isEmpty()).forEach(tags::add);
             
             if (hint.getUrl() != null && !hint.getUrl().isEmpty()) {
                 if (hint.getUrl().contains("youtube.com")) {
