@@ -145,14 +145,31 @@ public class Stepdefs {
         wait(500);
     }
     
-    
     @When("^Käyttäjä valitsee vinkkien listauksen$")
     public void käyttäjä_valitsee_vinkkien_listauksen() throws Throwable {
         stubIO.pushInt(app.findAction(queryHints.getHint()));
         wait(500);
     }
+    
+     @Given("^Tietokantaan on tallennettu vinkki otsikkolla \"([^\"]*)\", kuvauksella \"([^\"]*)\" ja tagilla \"([^\"]*)\" ja urlilla \"([^\"]*)\"$")
+    public void tietokantaa_on_tallennettu_vinkki_otsikkolla_kuvauksella_tagilla_urlilla(String otsikko, String kuvaus, String tag,String url) throws Throwable {
+        stubIO.pushInt(app.findAction(addHint.getHint()));
+        wait(500);
+        stubIO.pushString(otsikko);
+        stubIO.pushString(kuvaus);
+        stubIO.pushString(tag);
+        stubIO.pushString(url);
+        wait(500);
+    }
+    //    Then Kirjastoon on lisätty vinkki, jolla on otsikkona "otsikko" ja kommenttina "kommentti" ja urlina "url"
+    @Then("^Kirjastoon on lisätty vinkki, jolla on otsikkona \"([^\"]*)\" ja kommenttina \"([^\"]*)\" ja urlina \"([^\"]*)\"$")
+    public void kirjastoon_on_lisätty_vinkki_jolla_url(String otsikko, String kommentti, String url) throws Throwable {
+        boolean added = mockDao.findAll().stream().anyMatch(hint -> hint.getTitle().equals(otsikko)
+                && hint.getComment().equals(kommentti)
+                && hint.getUrl().equals(url));
 
-
+        assertTrue(added);
+    }
 
     private void wait(int millis) {
         try {
