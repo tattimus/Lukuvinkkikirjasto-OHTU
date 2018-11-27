@@ -111,4 +111,10 @@ public class SQLTagDAO implements TagDAO {
             return results;
         }
     }
+
+    @Override
+    public void update(Tag object) throws Exception {
+        //Tagin päivitys ei ole tarpeellinen operaatio
+        throw new UnsupportedOperationException("Tags cannot be updated");
+    }
 }
