@@ -6,6 +6,7 @@
 package ohtu.lukuvinkkikirjasto.actions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,27 +58,29 @@ public class AddHint extends Action {
             HintClass hint = new HintClass(null, title, comment, url);
             int hintId = hdao.insert(hint);
             hint.setID(hintId);
+            
+            List<String> tags = new ArrayList<>();
 
-            if (tagit.length() > 0) {
-                for (String newT : tagit.split(",")) {
-                    String newTag = newT.trim();
-                    Tag t = tdao.insertOrGet(new Tag(null, newTag));
-                    tagHint.associate(t, hint);
-                }
-            }
+            Arrays.stream(tagit.split(",")).forEach(tags::add);
             
             if (hint.getUrl() != null && !hint.getUrl().isEmpty()) {
                 if (hint.getUrl().contains("youtube.com")) {
-                      Tag t = tdao.insertOrGet(new Tag(null, "video"));
-                      tagHint.associate(t, hint);
+                    tags.add("video");
                 }
                 if (hint.getUrl().contains("dl.acm.org")) {
-                      Tag t = tdao.insertOrGet(new Tag(null, "kirja"));
-                      tagHint.associate(t, hint);
+                    tags.add("kirja");
                 }
-                   
             }
-
+            
+            tags.stream().map(s -> s.trim()).distinct().forEach(tag -> {
+                try {
+                    Tag t = tdao.insertOrGet(new Tag(null, tag));
+                    tagHint.associate(t, hint);
+                } catch (Exception ex) {
+                    io.printLine("Tagin "+tag+" lisääminen epäonnistui: "+ex.getMessage());
+                }
+            });
+            
             io.printLine("Lisätty vinkki \"" + hint.getTitle() + "\"");
         } catch (Exception ex) {
             io.printLine("Vinkin lisääminen epäonnistui: " + ex.getMessage());
