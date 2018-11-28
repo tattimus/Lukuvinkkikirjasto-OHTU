@@ -29,7 +29,7 @@ public class QueryHintsTest {
 
     @Test
     public void returnsCorrectTitle() throws Exception {
-        HintClass hint = new HintClass(null, "otsikko", "kommentti", "www.example.com");
+        HintClass hint = new HintClass(1, "otsikko", "kommentti", "www.example.com");
         dao.insert(hint);
         
         qh.run(io);
