@@ -12,6 +12,7 @@ import java.util.List;
  * @author jaakko
  */
 public interface DAO<T extends ObjectWithID> {
+    void update(T object) throws Exception;
     int insert(T object) throws Exception;
     void delete(int id) throws Exception;
     T findOne(int id) throws Exception;
