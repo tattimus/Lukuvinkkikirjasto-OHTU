@@ -78,6 +78,19 @@ public class AddHintTest {
     }
 
     @Test
+    public void addingHintWithSameTagManyTimesDoesNotCrash() throws InterruptedException {
+        AsyncStubIO io = new AsyncStubIO();
+        io.pushString("otsikko");
+        io.pushString("kommentti");
+        io.pushString("video,video,video,video,video,video,video");
+        io.pushString(null);
+        
+        newHint.run(io);
+        
+        assertTrue(io.getOutput().stream().anyMatch(s -> s.contains("Lisätty vinkki")));
+    }
+    
+    @Test
     public void TagsAreAssignedToHints() throws Exception {
         AsyncStubIO io = new AsyncStubIO();
         io.pushString("otsikko");
