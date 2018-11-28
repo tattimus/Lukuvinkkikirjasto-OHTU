@@ -157,7 +157,7 @@ public class Stepdefs {
         wait(500);
         stubIO.pushString(otsikko);
         stubIO.pushString(kuvaus);
-        stubIO.pushString(tag);
+        stubIO.pushString("");
         stubIO.pushString(url);
         wait(500);
     }
@@ -170,6 +170,13 @@ public class Stepdefs {
 
         assertTrue(added);
     }
+    
+    
+    @Given("^Tietokantaan on tallenettu tagi \"([^\"]*)\"$")
+    public void tietokantaan_on_tallenettu_tagi(String tag) throws Throwable {
+        tagDAO.insert(new Tag(null,tag));
+    }
+
 
     private void wait(int millis) {
         try {
