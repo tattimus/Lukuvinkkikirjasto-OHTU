@@ -35,7 +35,7 @@ public class DeleteHint extends Action {
         try {
             id = Integer.parseInt(io.readString("Poistettavan vinkin ID"));
         } catch (Exception e){
-            io.printLine("Virheellinen id ");
+            io.printLine("Virheellinen syöte");
             return;
         }
         try {

@@ -12,12 +12,14 @@ import java.util.stream.Collectors;
 import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
 import ohtu.lukuvinkkikirjasto.dao.MockHintDAO;
 import ohtu.lukuvinkkikirjasto.actions.AddHint;
+import ohtu.lukuvinkkikirjasto.actions.DeleteHint;
 import ohtu.lukuvinkkikirjasto.actions.QueryHints;
 import ohtu.lukuvinkkikirjasto.actions.SearchByTag;
 import ohtu.lukuvinkkikirjasto.dao.MockTagDAO;
 import ohtu.lukuvinkkikirjasto.dao.MockTagHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.dao.TagDAO;
 import ohtu.lukuvinkkikirjasto.dao.TagHintAssociationTable;
+import ohtu.lukuvinkkikirjasto.hint.Hint;
 import ohtu.lukuvinkkikirjasto.hint.HintClass;
 import ohtu.lukuvinkkikirjasto.tag.Tag;
 import static org.junit.Assert.*;
@@ -33,6 +35,7 @@ public class Stepdefs {
     AddHint addHint;
     QueryHints queryHints;
     SearchByTag searchTag;
+    DeleteHint deleteHint;
     
 
     App app;
@@ -42,7 +45,8 @@ public class Stepdefs {
         addHint = new AddHint(mockDao, tagDAO, connect);
         queryHints = new QueryHints(mockDao);
         searchTag = new SearchByTag(mockDao,tagDAO,connect);
-        app = new App(stubIO, addHint, queryHints,searchTag);
+        deleteHint = new DeleteHint(mockDao);
+        app = new App(stubIO, addHint, queryHints,searchTag,deleteHint);
         app.start();
     }
 
@@ -170,14 +174,56 @@ public class Stepdefs {
 
         assertTrue(added);
     }
-    
-    
+     
     @Given("^Tietokantaan on tallenettu tagi \"([^\"]*)\"$")
     public void tietokantaan_on_tallenettu_tagi(String tag) throws Throwable {
         tagDAO.insert(new Tag(null,tag));
     }
+    
+    @When("^Käyttäjä valitsee Vinkin poistamisen, antaa väärän ID \"([^\"]*)\"$")
+    public void käyttäjä_valitsee_Vinkin_poistamisen_antaa_väärän_ID(String id) throws Throwable {
+        stubIO.pushInt(app.findAction(deleteHint.getHint()));
+        wait(500);
+        stubIO.pushString(id);
+        wait(500);
+    }
+    
+    @Given("^Tietokantaan on tallennettu vinkki otsikkolla \"([^\"]*)\", kuvauksella \"([^\"]*)\" ja id:llä (\\d+)$")
+    public void tietokantaan_on_tallennettu_vinkki_otsikkolla_kuvauksella_ja_id_llä(String otsikko, String kuvaus, int id) throws Throwable {
+        mockDao.insert(new HintClass(null,otsikko,kuvaus,""));
+    }
+    
+    @When("^Käyttäjä valitsee Vinkin poistamisen, antaa ID \"([^\"]*)\" ja vahvistaa että haluaa poistaa vinkin$")
+    public void käyttäjä_valitsee_Vinkin_poistamisen_antaa_ID_ja_vahvistaa_että_haluaa_poistaa_vinkin(String id) throws Throwable {
+        stubIO.pushInt(app.findAction(deleteHint.getHint()));
+        wait(500);
+        stubIO.pushString(id);
+        wait(500);
+        stubIO.pushString("y");
+        wait(500);
+    }
+    
+    @Then("^Kirjastosta ei enään löydy vinkkiä id:llä (\\d+)$")
+    public void kirjastosta_ei_enään_löydy_vinkkiä_id_llä(int id) throws Throwable {
+        assertTrue(mockDao.findOne(id)==null);
+    }
+    
+    @When("^Käyttäjä valitsee Vinkin poistamisen, antaa ID \"([^\"]*)\" ja ei vahvista poistamista$")
+    public void käyttäjä_valitsee_Vinkin_poistamisen_antaa_ID_ja_ei_vahvista_poistamista(String id) throws Throwable {
+        stubIO.pushInt(app.findAction(deleteHint.getHint()));
+        wait(500);
+        stubIO.pushString(id);
+        wait(500);
+        stubIO.pushString("n");
+        wait(500);
+    }
+    
+    @Then("^Kirjastosta löytyy id:llä (\\d+) vinkki jonka otsikko \"([^\"]*)\" ja kuvaus \"([^\"]*)\"$")
+    public void kirjastosta_löytyy_id_llä_vinkki_jonka_otsikko_ja_kuvaus(int id, String otsikko, String kommentti) throws Throwable {
+        assertTrue(mockDao.findOne(id).getTitle().equals(otsikko) && mockDao.findOne(id).getComment().equals(kommentti));
+    }
 
-
+   
     private void wait(int millis) {
         try {
             Thread.sleep(millis);
