@@ -157,7 +157,7 @@ public class Stepdefs {
         wait(500);
         stubIO.pushString(otsikko);
         stubIO.pushString(kuvaus);
-        stubIO.pushString("");
+        stubIO.pushString(tag);
         stubIO.pushString(url);
         wait(500);
     }

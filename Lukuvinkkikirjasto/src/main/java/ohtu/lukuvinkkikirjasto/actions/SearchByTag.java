@@ -43,8 +43,7 @@ public class SearchByTag extends Action {
         if (tag == null) {
             io.printLine("Haettua tagia ei ole olemassa");
             return;
-        }
-        
+        } 
         try {
             if (tagHint.findBForA(tag).isEmpty()) {
                 io.printLine("Tagiin "+tag.getTag()+" ei liity vinkkejä");
@@ -52,8 +51,6 @@ public class SearchByTag extends Action {
             }            
         } catch (Exception e) {            
         }
-        
-        
         io.printLine("Tagi: "+tag.getTag());
         io.printLine("Vinkit:");
         try {
