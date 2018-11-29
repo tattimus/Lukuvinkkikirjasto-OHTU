@@ -63,13 +63,14 @@ public class ShowHint extends Action {
         }
 
     }
+
     private void printData(HintClass hint, List<Tag> tags, IO io) {
         io.printLine(hint.printAll());
-            String tagOutput = "\tTagit: ";
-            for (Tag t : tags) {
-                tagOutput += t.toString() + " ";
-            }
-            io.printLine(tagOutput);
+        String tagOutput = "\tTagit: ";
+        for (Tag t : tags) {
+            tagOutput += t.toString() + " ";
+        }
+        io.printLine(tagOutput);
     }
 
 }
