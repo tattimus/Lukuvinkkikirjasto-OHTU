@@ -53,14 +53,14 @@ public class SQLTagHintAssociationTable implements TagHintAssociationTable {
     @Override
     public List<HintClass> findBForA(Tag object) throws Exception {
         try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT id, otsikko, kommentti, url FROM Vinkki, TagiVinkki WHERE TagiVinkki.tagi_id = ? AND TagiVinkki.vinkki_id = Vinkki.id");
+            PreparedStatement stmt = connection.prepareStatement("SELECT id, otsikko, kommentti, url, luettu_aikaleima FROM Vinkki, TagiVinkki WHERE TagiVinkki.tagi_id = ? AND TagiVinkki.vinkki_id = Vinkki.id");
             stmt.setInt(1, object.getID());
 
             ResultSet rs = stmt.executeQuery();
             
             List<HintClass> results = new ArrayList<>();
             while (rs.next()) {
-                results.add(new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"), rs.getString("url")));
+                results.add(new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"), rs.getString("url"), rs.getTimestamp("luettu_aikaleima")));
             }
             
             return results;
