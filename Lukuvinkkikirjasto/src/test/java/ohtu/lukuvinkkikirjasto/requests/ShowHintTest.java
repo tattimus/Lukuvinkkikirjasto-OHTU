@@ -41,7 +41,6 @@ public class ShowHintTest {
     HintClass hint3;
     Tag tag1;
     Tag tag2;
-    
 
     public ShowHintTest() {
     }
@@ -103,24 +102,27 @@ public class ShowHintTest {
         assertTrue(io.getOutput().toString().contains(tag1.toString()) && io.getOutput().toString().contains(tag2.toString()));
         assertTrue(io.getOutput().toString().contains("Merkitäänkö luetuksi(y/n)"));
     }
-    @Test 
+
+    @Test
     public void TimestampIsSet() throws Exception {
         io.pushInt(1);
         io.pushString("y");
         showhint.run(io);
-        
+
         assertTrue(io.getOutput().toString().contains("Vinkki on merkitty luetuksi"));
         assertEquals(hdao.findOne(1).getTimestamp().toString(), new Date(2323223232L).toString());
 
     }
+
     @Test
-    public void TimestampIsShown() throws Exception{
+    public void TimestampIsShown() throws Exception {
         hdao.setTimestamp(0);
         io.pushInt(0);
         showhint.run(io);
-        assertTrue(io.getOutput().toString().contains("luettu: 1970-01-28 01:20:23"));
+        System.out.println(io.getOutput());
+        //assertTrue(io.getOutput().toString().contains("luettu: 1970-01-28 01:20:23"));
+        assertTrue(io.getOutput().stream().anyMatch(s->s.contains("luettu: 1970-01-28 01:20:23")));
         assertFalse(io.getOutput().toString().contains("Merkitäänkö luetuksi(y/n)"));
-        
-    
-}
+
+    }
 }
