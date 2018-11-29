@@ -108,6 +108,7 @@ public class SQLHintDAO implements HintDAO {
 
             return results;
         }
+
     }
 
     @Override
@@ -120,6 +121,21 @@ public class SQLHintDAO implements HintDAO {
             stmt.execute();
         } catch (Exception e) {
             System.out.println(e);
+        }
+
+
+    }
+
+    @Override
+    public void update(HintClass object) throws Exception {
+        try (Connection connection = database.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE Vinkki SET otsikko = ?, kommentti = ?, url = ? WHERE id = ?");
+            stmt.setString(1, object.getTitle());
+            stmt.setString(2, object.getComment());
+            stmt.setString(3, object.getUrl());
+            stmt.setInt(4, object.getID());
+
+            stmt.execute();
         }
 
     }

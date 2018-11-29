@@ -4,7 +4,7 @@
 
 Ryhmän nimi: *Ohjelmistontuottajat*
 
-* [Burndown-käyrä](/projectDocuments/BurnDownKäyrä.png)
+* [Burndown-käyrä](https://docs.google.com/spreadsheets/d/1F60Hm_2pOSuHzeR_-toV5Pt2lhebRR9-kvPmpjvZurc/edit?usp=sharing)
 
 **Defenition of done:**
 * Ohjelmoitu

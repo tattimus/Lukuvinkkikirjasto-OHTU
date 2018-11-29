@@ -96,7 +96,7 @@ public class HintClass implements Hint, ObjectWithID {
 
     @Override
     public String toString() {
-        return "\tOtsikko: " + title + "\n\tKommentti: " + comment
+        return "\tID: "+id+ "\n\tOtsikko: " + title + "\n\tKommentti: " + comment
                 +"\n\tURL: " + url;
     }
     public String formatDate() {

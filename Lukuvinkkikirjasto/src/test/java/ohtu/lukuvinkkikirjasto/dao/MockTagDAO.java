@@ -74,4 +74,9 @@ public class MockTagDAO implements TagDAO {
         return palautettava;
     }
 
+    @Override
+    public void update(Tag object) throws Exception {
+        throw new UnsupportedOperationException("Tags cannot be updated");
+    }
+
 }

@@ -30,8 +30,8 @@ public class QueryHintsTest {
     @Test
     public void returnsCorrectTitle() throws Exception {
         HintClass hint = new HintClass(null, "otsikko", "kommentti", "www.example.com");
-        dao.insert(hint);
-        
+        int id = dao.insert(hint);
+        hint.setID(id);
         qh.run(io);
         assertTrue(io.getOutput().contains(hint.toString()));
     }
