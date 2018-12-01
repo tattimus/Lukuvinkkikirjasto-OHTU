@@ -78,7 +78,7 @@ public class SearchByTagTest {
     public void givesErrorwhenWrongTag() throws Exception{
         io.pushString("bad");
         sbt.run(io);
-        assertTrue(io.getOutput().contains("Tagilla ei löytynyt vinkkejä"));
+        assertTrue(io.getOutput().contains("Haettua tagia ei ole olemassa"));
     }
 
 }

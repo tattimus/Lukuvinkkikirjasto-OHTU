@@ -41,9 +41,19 @@ public class SearchByTag extends Action {
     public void run(IO io) {
         Tag tag = tagSearch(io.readString("Etsittävä tagi"));
         if (tag == null) {
-            io.printLine("Tagilla ei löytynyt vinkkejä");
+            io.printLine("Haettua tagia ei ole olemassa");
             return;
         }
+        
+        try {
+            if (tagHint.findBForA(tag).isEmpty()) {
+                io.printLine("Tagiin "+tag.getTag()+" ei liity vinkkejä");
+                return;
+            }            
+        } catch (Exception e) {            
+        }
+        
+        
         io.printLine("Tagi: "+tag.getTag());
         io.printLine("Vinkit:");
         try {
