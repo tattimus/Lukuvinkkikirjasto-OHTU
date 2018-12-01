@@ -76,12 +76,5 @@ public class SQLHintDAOTest {
         
         assertEquals("otsikko", vinkkiDao.findOne(vinkki.getID()).getTitle());
     }
-    @Test
-    public void testSetTimeStamp() throws Exception {
-        HintClass vinkki=new HintClass(null, "Testi", "Testi", "www.testi.com");
-        vinkki.setID(vinkkiDao.insert(vinkki));
-        assertTrue(vinkkiDao.findOne(vinkki.getID()).getTimestamp()==null);
-        vinkkiDao.setTimestamp(vinkki.getID());
-        assertFalse(vinkkiDao.findOne(vinkki.getID()).getTimestamp()==null);
-    }
+
 }

@@ -23,10 +23,6 @@ public interface HintDAO extends DAO<HintClass> {
 
     int insert(HintClass object) throws Exception;
 
-
-    void setTimestamp(int id) throws Exception;
-
-
     void update(HintClass object) throws Exception;
 
 }

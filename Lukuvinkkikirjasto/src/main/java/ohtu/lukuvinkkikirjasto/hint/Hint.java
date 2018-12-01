@@ -23,6 +23,8 @@ public interface Hint {
     
     String getUrl();
     
+    void setTimestamp(Date date);
+    
     Date getTimestamp();
     
     String printAll();

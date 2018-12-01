@@ -43,14 +43,6 @@ public class MockHintDAO implements HintDAO {
         return id;
     }
 
-    @Override
-
-    public void setTimestamp(int id) throws Exception {
-        HintClass h= map.get(id);
-        Date ts=new Date(2323223232L);
-        HintClass s=new HintClass(id, h.getTitle(), h.getComment(), h.getUrl(), ts);
-        map.put(id, s);
-      }
 @Override
     public void update(HintClass object) throws Exception {
         map.put(object.getID(), object);

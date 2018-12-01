@@ -5,6 +5,8 @@
  */
 package ohtu.lukuvinkkikirjasto.requests;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
 import ohtu.lukuvinkkikirjasto.IO.IO;
@@ -110,16 +112,18 @@ public class ShowHintTest {
         showhint.run(io);
 
         assertTrue(io.getOutput().toString().contains("Vinkki on merkitty luetuksi"));
-        assertEquals(hdao.findOne(1).getTimestamp().toString(), new Date(2323223232L).toString());
+        assertFalse(hdao.findOne(1).getTimestamp() == null);
 
     }
 
     @Test
     public void TimestampIsShown() throws Exception {
-        hdao.setTimestamp(0);
+        Date d=new Timestamp(System.currentTimeMillis());
+        hdao.update(new HintClass(0, "otsikko1", "kommentti1", "url1", d));
         io.pushInt(0);
         showhint.run(io);
-        assertTrue(io.getOutput().toString().contains("luettu: 1970"));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        assertTrue(io.getOutput().toString().contains("luettu: "+sdf.format(d)));
         assertFalse(io.getOutput().toString().contains("Merkitäänkö luetuksi(y/n)"));
 
     }

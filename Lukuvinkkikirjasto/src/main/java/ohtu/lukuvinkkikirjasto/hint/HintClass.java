@@ -85,6 +85,7 @@ public class HintClass implements Hint, ObjectWithID {
         return this.read_time;
     }
     
+    
     @Override
     public String printAll() {
         String ret="\tOtsikko: " + title + "\n\tKommentti: " + comment
@@ -100,15 +101,14 @@ public class HintClass implements Hint, ObjectWithID {
                 +"\n\tURL: " + url;
     }
     public String formatDate() {
-        TimeZone tz = TimeZone.getDefault();
-        long off=tz.getOffset(new Date().getTime());
-        read_time.setTime(read_time.getTime()+off);
-        
-        Calendar calendar=Calendar.getInstance();
-        calendar.setTime(read_time);
       
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        String ret=sdf.format(calendar.getTime());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String ret=sdf.format(read_time);
         return ret;
+    }
+
+    @Override
+    public void setTimestamp(Date date) {
+        this.read_time=date;
     }
 }

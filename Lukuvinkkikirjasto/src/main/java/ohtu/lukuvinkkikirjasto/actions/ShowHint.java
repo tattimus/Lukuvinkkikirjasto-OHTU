@@ -6,6 +6,7 @@
 package ohtu.lukuvinkkikirjasto.actions;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import ohtu.lukuvinkkikirjasto.IO.IO;
@@ -53,7 +54,9 @@ public class ShowHint extends Action {
                 String r = io.readString("\nMerkitäänkö luetuksi(y/n)");
                 if (r.equals("y") || r.equals("Y")) {
 
-                    hdao.setTimestamp(id);
+                    Date ts=new Timestamp(System.currentTimeMillis());
+                    hint.setTimestamp(ts);
+                    hdao.update(hint);
                     io.printLine("Vinkki on merkitty luetuksi");
 
                 }
