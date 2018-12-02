@@ -28,11 +28,18 @@ public class CommandLineIO implements IO {
         System.out.println(printable);
     }
 
-    @Override
+ @Override
     public int readInt(String prompt) {
         System.out.println(prompt);
-        int i = scanner.nextInt();
-        return i;
+
+        String string = scanner.nextLine();
+        if (Integer.getInteger(string) != null) {
+            return Integer.getInteger(string);
+        } else {
+            System.out.println("Syötteen on oltava merkkijono");
+            return -1;
+        }
+
     }
 
     @Override
