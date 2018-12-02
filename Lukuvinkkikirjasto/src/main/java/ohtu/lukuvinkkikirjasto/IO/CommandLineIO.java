@@ -33,11 +33,11 @@ public class CommandLineIO implements IO {
         System.out.println(prompt);
 
         String string = scanner.nextLine();
-        if (Integer.getInteger(string) != null) {
-            return Integer.getInteger(string);
-        } else {
-            System.out.println("Syötteen on oltava luku");
-            return -1;
+        try{
+            return Integer.valueOf(string);
+        }catch(Exception e){
+            System.out.println(e);
+            return-1;
         }
 
     }
