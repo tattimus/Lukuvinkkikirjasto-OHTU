@@ -36,7 +36,7 @@ public class CommandLineIO implements IO {
         if (Integer.getInteger(string) != null) {
             return Integer.getInteger(string);
         } else {
-            System.out.println("Syötteen on oltava merkkijono");
+            System.out.println("Syötteen on oltava luku");
             return -1;
         }
 
