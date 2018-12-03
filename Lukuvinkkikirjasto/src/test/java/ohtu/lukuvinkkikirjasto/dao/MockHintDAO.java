@@ -5,6 +5,8 @@
  */
 package ohtu.lukuvinkkikirjasto.dao;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +20,7 @@ import ohtu.lukuvinkkikirjasto.hint.HintClass;
 public class MockHintDAO implements HintDAO {
     private HashMap<Integer, HintClass> map = new HashMap<>();
     private int idCounter = 0;
-    
+
     @Override
     public void delete(int id) throws Exception {
         map.remove(id);
@@ -41,9 +43,10 @@ public class MockHintDAO implements HintDAO {
         return id;
     }
 
-    @Override
+@Override
     public void update(HintClass object) throws Exception {
         map.put(object.getID(), object);
+
     }
-    
+
 }

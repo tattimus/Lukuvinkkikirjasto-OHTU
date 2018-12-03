@@ -76,4 +76,5 @@ public class SQLHintDAOTest {
         
         assertEquals("otsikko", vinkkiDao.findOne(vinkki.getID()).getTitle());
     }
+
 }

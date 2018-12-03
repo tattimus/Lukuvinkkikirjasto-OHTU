@@ -5,6 +5,7 @@
  */
 package ohtu.lukuvinkkikirjasto.dao;
 
+import java.util.Date;
 import java.util.List;
 import ohtu.lukuvinkkikirjasto.hint.HintClass;
 
@@ -21,6 +22,7 @@ public interface HintDAO extends DAO<HintClass> {
     HintClass findOne(int id) throws Exception;
 
     int insert(HintClass object) throws Exception;
-    
+
     void update(HintClass object) throws Exception;
+
 }
