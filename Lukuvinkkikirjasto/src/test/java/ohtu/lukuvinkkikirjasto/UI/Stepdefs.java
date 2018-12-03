@@ -13,6 +13,7 @@ import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
 import ohtu.lukuvinkkikirjasto.dao.MockHintDAO;
 import ohtu.lukuvinkkikirjasto.actions.AddHint;
 import ohtu.lukuvinkkikirjasto.actions.DeleteHint;
+import ohtu.lukuvinkkikirjasto.actions.ModifyHint;
 import ohtu.lukuvinkkikirjasto.actions.QueryHints;
 import ohtu.lukuvinkkikirjasto.actions.SearchByTag;
 import ohtu.lukuvinkkikirjasto.dao.MockTagDAO;
@@ -36,7 +37,7 @@ public class Stepdefs {
     QueryHints queryHints;
     SearchByTag searchTag;
     DeleteHint deleteHint;
-    
+    ModifyHint modifyHint;
 
     App app;
 
@@ -46,7 +47,8 @@ public class Stepdefs {
         queryHints = new QueryHints(mockDao);
         searchTag = new SearchByTag(mockDao,tagDAO,connect);
         deleteHint = new DeleteHint(mockDao);
-        app = new App(stubIO, addHint, queryHints,searchTag,deleteHint);
+        modifyHint = new ModifyHint(mockDao,tagDAO,connect);
+        app = new App(stubIO, addHint, queryHints,searchTag,deleteHint,modifyHint);
         app.start();
     }
 
@@ -222,6 +224,36 @@ public class Stepdefs {
     public void kirjastosta_löytyy_id_llä_vinkki_jonka_otsikko_ja_kuvaus(int id, String otsikko, String kommentti) throws Throwable {
         assertTrue(mockDao.findOne(id).getTitle().equals(otsikko) && mockDao.findOne(id).getComment().equals(kommentti));
     }
+    
+    @When("^Käyttäjä valitsee vinkin muokkaamisen$")
+    public void käyttäjä_valitsee_vinkin_muokkaamisen() throws Throwable {
+        stubIO.pushInt(app.findAction(modifyHint.getHint()));
+    }
+    
+    @When("^Syöttää muokattavan vinkin ID:ksi (\\d+) ja otsikoksi \"([^\"]*)\" ja jättää muut kentät tyhjäksi$")
+    public void syöttää_muokattavan_vinkin_ID_ksi_ja_otsikoksi_ja_jättää_muut_kentät_tyhjäksi(int id, String title) throws Throwable {
+        stubIO.pushInt(id);
+        stubIO.pushString(title);
+        
+        stubIO.pushString("");
+        stubIO.pushString("");
+        stubIO.pushString("");
+        
+        wait(500);
+    }
+
+    @When("^Varmistaa muutokset valitsemalla \"([^\"]*)\"$")
+    public void varmistaa_muutokset_valitsemalla(String selection) throws Throwable {
+        stubIO.pushString(selection);
+        
+        wait(500);
+    }
+    
+    @Then("^Vinkin (\\d+) otsikko on \"([^\"]*)\"$")
+    public void vinkin_otsikko_on(int id, String title) throws Throwable {
+        assertEquals(title, mockDao.findOne(id).getTitle());
+    }
+
 
    
     private void wait(int millis) {
