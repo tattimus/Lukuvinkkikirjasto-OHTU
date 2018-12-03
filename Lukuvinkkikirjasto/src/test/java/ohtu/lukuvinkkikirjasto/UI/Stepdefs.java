@@ -305,6 +305,16 @@ public class Stepdefs {
     public void vinkin_otsikko_on(int id, String title) throws Throwable {
         assertEquals(title, mockDao.findOne(id).getTitle());
     }
+    
+    @Then("^Vinkin ID (\\d+) Aikaleima tulostuu$")
+    public void vinkin_ID_Aikaleima_tulostuu(int id) throws Throwable {
+        ohjelma_tulostaa(mockDao.findOne(id).getTimestamp().toString().substring(0,16));
+    }
+    
+    @Then("^Vinkin ID (\\d+) Aikaleima ei tulostuu$")
+    public void vinkin_ID_Aikaleima_ei_tulostuu(int id) throws Throwable {
+        assertFalse(stubIO.getOutput().stream().filter(line -> line.contains("luettu")).findAny().isPresent());
+    }
 
 
     private void wait(int millis) {
