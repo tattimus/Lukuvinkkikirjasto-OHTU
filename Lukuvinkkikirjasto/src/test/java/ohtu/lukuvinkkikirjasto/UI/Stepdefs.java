@@ -293,6 +293,14 @@ public class Stepdefs {
 
         wait(500);
     }
+    
+    @When("^Peruu muutokset valitsemalla \"([^\"]*)\"$")
+    public void peruu_muutokset_valitsemalla(String selection) throws Throwable {
+        stubIO.pushString(selection);
+
+        wait(500);
+    }
+
 
     @When("^Varmistaa muutokset valitsemalla \"([^\"]*)\"$")
     public void varmistaa_muutokset_valitsemalla(String selection) throws Throwable {
