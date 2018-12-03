@@ -44,6 +44,8 @@ dependencies {
     
     testCompile 'info.cukes:cucumber-java:' + cucumberVersion
     testCompile 'info.cukes:cucumber-junit:' + cucumberVersion
+    
+     compile 'org.jsoup:jsoup:1.11.3'
 }
 
 test {
