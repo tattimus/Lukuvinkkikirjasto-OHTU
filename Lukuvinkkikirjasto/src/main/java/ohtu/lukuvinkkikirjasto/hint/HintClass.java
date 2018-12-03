@@ -100,6 +100,15 @@ public class HintClass implements Hint, ObjectWithID {
         return "\tID: "+id+ "\n\tOtsikko: " + title + "\n\tKommentti: " + comment
                 +"\n\tURL: " + url;
     }
+
+    @Override
+    public String listingAll(){
+        String ret="\tID: "+id+ "\n\tOtsikko: " + title + "\n\tKommentti: " + comment;
+        if(!this.url.equals("")) ret += "\n\tURL: " + url;
+        if(this.read_time!=null) ret+="\n\tluettu: "+formatDate();
+        return ret;
+    }
+
     public String formatDate() {
       
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

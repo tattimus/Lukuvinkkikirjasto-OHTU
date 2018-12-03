@@ -31,7 +31,7 @@ public class QueryHints extends Action {
         try {
             hdao.findAll().forEach(hint -> {
                 io.printLine("");
-                io.printLine(hint);
+                io.printLine(hint.listingAll());
             });
         } catch (Exception ex) {
             io.printLine("Vinkkien lukeminen epäonnistui: "+ex.getMessage());

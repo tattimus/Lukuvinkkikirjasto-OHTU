@@ -48,7 +48,7 @@ public class DeleteHint extends Action {
         }
         try {
             Hint hint = hdao.findOne(id);
-            io.printLine("Haluatko varmasti poistaa vinkin:\n\n"+hint+"\n\n(Y/N)?");
+            io.printLine("Haluatko varmasti poistaa vinkin:\n\n"+hint.listingAll()+"\n\n(Y/N)?");
             if (io.readString("").toUpperCase().equals("Y")) {
                 hdao.delete(id);
                 io.printLine("Vinkki poistettu");

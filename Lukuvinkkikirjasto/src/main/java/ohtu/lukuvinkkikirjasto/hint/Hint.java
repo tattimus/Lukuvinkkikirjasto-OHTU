@@ -30,6 +30,8 @@ public interface Hint {
     String printAll();
     
     void setUrl(String url);
+
+    String listingAll();
     
     
 }
