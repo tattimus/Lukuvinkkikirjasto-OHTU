@@ -5,6 +5,8 @@
  */
 package ohtu.lukuvinkkikirjasto.hint;
 
+import java.util.Date;
+
 /**
  *
  * @author y50u
@@ -21,6 +23,13 @@ public interface Hint {
     
     String getUrl();
     
+    void setTimestamp(Date date);
+    
+    Date getTimestamp();
+    
+    String printAll();
+    
     void setUrl(String url);
+    
     
 }

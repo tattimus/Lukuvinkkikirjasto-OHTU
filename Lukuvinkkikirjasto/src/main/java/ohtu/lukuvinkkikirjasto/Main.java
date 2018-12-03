@@ -11,6 +11,7 @@ import ohtu.lukuvinkkikirjasto.actions.AddHint;
 import ohtu.lukuvinkkikirjasto.actions.DeleteHint;
 import ohtu.lukuvinkkikirjasto.actions.QueryHints;
 import ohtu.lukuvinkkikirjasto.actions.SearchByTag;
+import ohtu.lukuvinkkikirjasto.actions.ShowHint;
 import ohtu.lukuvinkkikirjasto.dao.SQLTagDAO;
 import ohtu.lukuvinkkikirjasto.dao.SQLTagHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.dao.TagDAO;
@@ -29,9 +30,10 @@ public class Main {
         TagHintAssociationTable association=new SQLTagHintAssociationTable(database);
 
         IO io = new CommandLineIO();
-        App app = new App(io, new AddHint(hdao, tdao, association), new QueryHints(hdao), new SearchByTag(hdao, tdao, association), new DeleteHint(hdao));
+        App app = new App(io, new AddHint(hdao, tdao, association), new QueryHints(hdao), new SearchByTag(hdao, tdao, association), new ShowHint(hdao, tdao, association), new DeleteHint(hdao));
+
         app.start();
-        
+
         app.join();
     }
 
