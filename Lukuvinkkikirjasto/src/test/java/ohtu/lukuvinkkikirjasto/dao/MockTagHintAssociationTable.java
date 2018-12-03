@@ -57,7 +57,12 @@ public class MockTagHintAssociationTable implements TagHintAssociationTable{
 
     @Override
     public void unassociate(Tag tag, HintClass hint) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        tagToHint.removeIf(p -> {
+            return p.getKey().equals(tag.getID()) && p.getValue().equals(hint.getID());
+        }); 
+        hintToTag.removeIf(p -> {
+            return p.getKey().equals(hint.getID()) && p.getValue().equals(tag.getID());
+        });
     }
     
 
