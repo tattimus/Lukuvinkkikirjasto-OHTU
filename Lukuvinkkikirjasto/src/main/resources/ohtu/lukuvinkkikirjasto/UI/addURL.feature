@@ -17,7 +17,7 @@ Scenario: Lisää vinkki youtube URLin kanssa
 
 Scenario: Lisää vinkki acm URLin kanssa
     Given Ohjelma on käynnistetty
-    And Tietokantaan on tallennettu vinkki otsikkolla "otsikko", kuvauksella "kommentti" ja tagilla "" ja urlilla "dl.acm.org"
+    And Tietokantaan on tallennettu vinkki otsikkolla "otsikko", kuvauksella "kommentti" ja tagilla "" ja urlilla "https://dl.acm.org"
     Then Käyttäjä valitsee tagilla hakemisen ja antaa tagin "kirja"
         Then Ohjelma tulostaa "Tagi: kirja"
         And Ohjelma tulostaa "Otsikko: otsikko"

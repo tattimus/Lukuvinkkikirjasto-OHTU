@@ -67,7 +67,7 @@ public class AddHint extends Action {
                 if (hint.getUrl().contains("youtube.com")) {
                     tags.add("video");
                 }
-                if (hint.getUrl().contains("dl.acm.org")) {
+                if (hint.getUrl().contains("https://dl.acm.org")) {
                     tags.add("kirja");
                     FindTags finder = new FindTags();
                     tags.addAll(finder.search(url));
