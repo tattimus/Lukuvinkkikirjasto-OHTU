@@ -62,7 +62,7 @@ public class ShowHint extends Action {
                 }
             }
         } catch (Exception e) {
-            System.out.println(e);
+            io.printLine("Virheellinen syöte");
         }
 
     }
