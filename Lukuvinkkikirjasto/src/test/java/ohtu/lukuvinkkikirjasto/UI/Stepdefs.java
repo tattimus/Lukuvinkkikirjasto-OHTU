@@ -176,6 +176,7 @@ public class Stepdefs {
         HintClass hint = mockDao.findOne(id);
         assertTrue(hint.getTimestamp() == null);
     }
+    
     @Then("Vinkin (\\d+) lukukuittaus tulostuu oikein$")
     public void Vinkin_lukukuittaus_tulostuu(int id) throws Throwable {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -288,7 +289,7 @@ public class Stepdefs {
     public void syöttää_muokattavan_vinkin_ID_ksi_ja_otsikoksi_ja_jättää_muut_kentät_tyhjäksi(int id, String title) throws Throwable {
         stubIO.pushInt(id);
         stubIO.pushString(title);
-
+        
         stubIO.pushString("");
         stubIO.pushString("");
         stubIO.pushString("");
