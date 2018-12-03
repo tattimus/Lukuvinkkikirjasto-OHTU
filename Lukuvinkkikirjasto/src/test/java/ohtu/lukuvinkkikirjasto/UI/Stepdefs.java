@@ -5,6 +5,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +27,7 @@ import ohtu.lukuvinkkikirjasto.dao.TagHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.hint.Hint;
 import ohtu.lukuvinkkikirjasto.hint.HintClass;
 import ohtu.lukuvinkkikirjasto.tag.Tag;
+import org.junit.Assert;
 import static org.junit.Assert.*;
 
 public class Stepdefs {
@@ -293,6 +295,14 @@ public class Stepdefs {
 
         wait(500);
     }
+    
+    @When("^Peruu muutokset valitsemalla \"([^\"]*)\"$")
+    public void peruu_muutokset_valitsemalla(String selection) throws Throwable {
+        stubIO.pushString(selection);
+
+        wait(500);
+    }
+
 
     @When("^Varmistaa muutokset valitsemalla \"([^\"]*)\"$")
     public void varmistaa_muutokset_valitsemalla(String selection) throws Throwable {
@@ -315,7 +325,42 @@ public class Stepdefs {
     public void vinkin_ID_Aikaleima_ei_tulostuu(int id) throws Throwable {
         assertFalse(stubIO.getOutput().stream().filter(line -> line.contains("luettu")).findAny().isPresent());
     }
+    
+    @When("^Syöttää muokattavan vinkin ID:ksi (\\d+) ja otsikoksi \"([^\"]*)\" ja jättää muut kentät tyhjäksi, mutta muokkaa tageja$")
+    public void syöttää_muokattavan_vinkin_ID_ksi_ja_otsikoksi_ja_jättää_muut_kentät_tyhjäksi_mutta_muokkaa_tageja(int id, String title) throws Throwable {
+        stubIO.pushInt(id);
+        stubIO.pushString(title);
 
+        stubIO.pushString("");
+        stubIO.pushString("");
+        
+        wait(500);
+    }
+
+    @When("^Poistaa tagin \"([^\"]*)\" painamalla \"([^\"]*)\"$")
+    public void poistaa_tagin_painamalla(String tag, String action) throws Throwable {
+        stubIO.pushString(action);
+        
+        wait(500);
+    }
+
+    @When("^Lisää uudet tagit \"([^\"]*)\"$")
+    public void lisää_uudet_tagit(String tags) throws Throwable {
+        stubIO.pushString(tags);
+        
+        wait(500);
+    }
+
+    @Then("^Vinkillä (\\d+) on tageina \"([^\"]*)\"$")
+    public void vinkillä_on_tageina(int id, String tags) throws Throwable {
+        String[] tagsSplit = tags.split(",");
+        String[] tagsFromDB = connect.findAForB(mockDao.findOne(id)).stream().map(tag -> tag.getTag()).collect(Collectors.toList()).toArray(new String[0]);
+        
+        Arrays.sort(tagsSplit);
+        Arrays.sort(tagsFromDB);
+        
+        assertArrayEquals(tagsSplit, tagsFromDB);
+    }
 
     private void wait(int millis) {
         try {
