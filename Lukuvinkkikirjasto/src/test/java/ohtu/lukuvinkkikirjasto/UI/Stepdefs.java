@@ -176,6 +176,7 @@ public class Stepdefs {
         HintClass hint = mockDao.findOne(id);
         assertTrue(hint.getTimestamp() == null);
     }
+    
     @Then("Vinkin (\\d+) lukukuittaus tulostuu oikein$")
     public void Vinkin_lukukuittaus_tulostuu(int id) throws Throwable {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -288,7 +289,7 @@ public class Stepdefs {
     public void syöttää_muokattavan_vinkin_ID_ksi_ja_otsikoksi_ja_jättää_muut_kentät_tyhjäksi(int id, String title) throws Throwable {
         stubIO.pushInt(id);
         stubIO.pushString(title);
-
+        
         stubIO.pushString("");
         stubIO.pushString("");
         stubIO.pushString("");
@@ -314,6 +315,16 @@ public class Stepdefs {
     @Then("^Vinkin (\\d+) otsikko on \"([^\"]*)\"$")
     public void vinkin_otsikko_on(int id, String title) throws Throwable {
         assertEquals(title, mockDao.findOne(id).getTitle());
+    }
+    
+    @Then("^Vinkin ID (\\d+) Aikaleima tulostuu$")
+    public void vinkin_ID_Aikaleima_tulostuu(int id) throws Throwable {
+        ohjelma_tulostaa(mockDao.findOne(id).getTimestamp().toString().substring(0,16));
+    }
+    
+    @Then("^Vinkin ID (\\d+) Aikaleima ei tulostuu$")
+    public void vinkin_ID_Aikaleima_ei_tulostuu(int id) throws Throwable {
+        assertFalse(stubIO.getOutput().stream().filter(line -> line.contains("luettu")).findAny().isPresent());
     }
     
     @When("^Syöttää muokattavan vinkin ID:ksi (\\d+) ja otsikoksi \"([^\"]*)\" ja jättää muut kentät tyhjäksi, mutta muokkaa tageja$")
