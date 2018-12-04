@@ -1,6 +1,8 @@
 # Lukuvinkkikirjasto-OHTU
 [![Build Status](https://travis-ci.org/tattimus/Lukuvinkkikirjasto-OHTU.svg?branch=master)](https://travis-ci.org/tattimus/Lukuvinkkikirjasto-OHTU)
 [![codecov](https://codecov.io/gh/tattimus/Lukuvinkkikirjasto-OHTU/branch/master/graph/badge.svg)](https://codecov.io/gh/tattimus/Lukuvinkkikirjasto-OHTU)
+[![MIT license](https://img.shields.io/github/license/tattimus/Lukuvinkkikirjasto-OHTU.svg)](LICENSE)
+
 
 Ryhmän nimi: *Ohjelmistontuottajat*
 
@@ -22,8 +24,10 @@ backlog](https://github.com/tattimus/Lukuvinkkikirjasto-OHTU/projects/1)
 ## Käyttöohje
 
 Ohjelmatiedoston Lukuvinkkikirjasto-all.jar saat ladattua [täältä](https://github.com/tattimus/Lukuvinkkikirjasto-OHTU/releases).
-Avaa komentorivi ja navigoi ohjelmatiedoston sisältävään kansioon. Käynnistä ohjelma komennolla 
-*java -jar Lukuvinkkikirjasto-all.jar*
+Avaa komentorivi ja navigoi ohjelmatiedoston sisältävään kansioon. Käynnistä ohjelma komennolla:
+```
+java -jar Lukuvinkkikirjasto-all.jar
+```
 
 Ohjelman päävalikosta voit valita haluamasi toiminnon toiminnon edessä sulkeissa olevalla numerolla. Valittavissa olevat toiminnot ovat:
 * **Lisää vinkki** Syötä vinkin tiedot pyydettäessä.
