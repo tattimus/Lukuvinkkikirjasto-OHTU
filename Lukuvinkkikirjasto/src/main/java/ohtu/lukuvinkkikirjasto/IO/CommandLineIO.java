@@ -28,11 +28,18 @@ public class CommandLineIO implements IO {
         System.out.println(printable);
     }
 
-    @Override
+ @Override
     public int readInt(String prompt) {
         System.out.println(prompt);
-        int i = scanner.nextInt();
-        return i;
+
+        String string = scanner.nextLine();
+        try{
+            return Integer.valueOf(string);
+        }catch(Exception e){
+            System.out.println(e);
+            return-1;
+        }
+
     }
 
     @Override
