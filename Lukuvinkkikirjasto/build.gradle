@@ -39,7 +39,8 @@ dependencies {
 
     compile group: 'org.json', name: 'json', version: '20180813'
 
-    
+    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.12.0'
+
     // TODO: Add dependencies here ...
     // You can read more about how to add dependency here:
     //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
