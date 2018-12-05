@@ -76,8 +76,8 @@ public class SQLHintDAO implements HintDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                Long timestamp = (Long)rs.getObject("luettu_aikaleima");
-               
+                Long timestamp = (Long) rs.getObject("luettu_aikaleima");
+
                 return new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"), rs.getString("url"), timestamp == null ? null : new Date(timestamp));
             } else {
                 return null;
@@ -94,9 +94,9 @@ public class SQLHintDAO implements HintDAO {
 
             List<HintClass> results = new ArrayList<>();
             while (rs.next()) {
-                Long timestamp = (Long)rs.getObject("luettu_aikaleima");
-                
-                results.add(new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"), rs.getString("url"),  timestamp == null ? null : new Date(timestamp)));
+                Long timestamp = (Long) rs.getObject("luettu_aikaleima");
+
+                results.add(new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"), rs.getString("url"), timestamp == null ? null : new Date(timestamp)));
 
             }
 
@@ -112,13 +112,13 @@ public class SQLHintDAO implements HintDAO {
             stmt.setString(1, object.getTitle());
             stmt.setString(2, object.getComment());
             stmt.setString(3, object.getUrl());
-            
+
             if (object.getTimestamp() != null) {
                 stmt.setLong(4, object.getTimestamp().getTime());
             } else {
                 stmt.setNull(4, Types.INTEGER);
             }
-            
+
             stmt.setInt(5, object.getID());
 
             stmt.execute();
@@ -127,4 +127,27 @@ public class SQLHintDAO implements HintDAO {
         }
 
     }
+
+    @Override
+    public List<HintClass> search(String attribute, String value) throws Exception {
+        String lause = "SELECT id, otsikko, kommentti, url, luettu_aikaleima FROM Vinkki WHERE lower(" + attribute + ") LIKE ?";
+        try (Connection connection = database.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement(lause);
+            stmt.setString(1, "%"+value+"%");
+            //stmt.setInt(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            List<HintClass> results = new ArrayList<>();
+            while (rs.next()) {
+                Long timestamp = (Long) rs.getObject("luettu_aikaleima");
+
+                results.add(new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"), rs.getString("url"), timestamp == null ? null : new Date(timestamp)));
+
+            }
+
+            return results;
+        }
+    }
 }
+
