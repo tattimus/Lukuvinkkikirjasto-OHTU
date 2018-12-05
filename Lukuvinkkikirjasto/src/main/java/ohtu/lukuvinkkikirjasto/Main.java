@@ -4,7 +4,11 @@ import ohtu.lukuvinkkikirjasto.IO.CommandLineIO;
 import ohtu.lukuvinkkikirjasto.IO.IO;
 import ohtu.lukuvinkkikirjasto.UI.App;
 import ohtu.lukuvinkkikirjasto.dao.HintDAO;
+import ohtu.lukuvinkkikirjasto.dao.MakerDAO;
+import ohtu.lukuvinkkikirjasto.dao.MakerHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.dao.SQLHintDAO;
+import ohtu.lukuvinkkikirjasto.dao.SQLMakerDAO;
+import ohtu.lukuvinkkikirjasto.dao.SQLMakerHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.database.Database;
 import ohtu.lukuvinkkikirjasto.database.SQLiteDatabase;
 import ohtu.lukuvinkkikirjasto.actions.AddHint;
@@ -28,15 +32,18 @@ public class Main {
         Database database = new SQLiteDatabase(System.getProperty("user.dir")+"/lukuvinkkikirjasto.db");
         HintDAO hdao = new SQLHintDAO(database);
         TagDAO tdao=new SQLTagDAO(database);
-        TagHintAssociationTable association=new SQLTagHintAssociationTable(database);
+        MakerDAO mdao = new SQLMakerDAO(database);
+        MakerHintAssociationTable makerAssociation = new SQLMakerHintAssociationTable(database);
+        TagHintAssociationTable tagAssociation=new SQLTagHintAssociationTable(database);
+
 
         IO io = new CommandLineIO();
-        App app = new App(io, new AddHint(hdao, tdao, association), 
+        App app = new App(io, new AddHint(hdao, tdao, mdao, tagAssociation, makerAssociation), 
                 new QueryHints(hdao), 
-                new SearchByTag(hdao, tdao, association), 
-                new ShowHint(hdao, tdao, association),
+                new SearchByTag(hdao, tdao, tagAssociation), 
+                new ShowHint(hdao, tdao, mdao,tagAssociation, makerAssociation),
                 new DeleteHint(hdao), 
-                new ModifyHint(hdao, tdao, association));
+                new ModifyHint(hdao, tdao, tagAssociation));
         app.start();
 
         app.join();

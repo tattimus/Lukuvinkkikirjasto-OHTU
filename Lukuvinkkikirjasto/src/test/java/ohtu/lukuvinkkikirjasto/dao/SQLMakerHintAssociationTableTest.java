@@ -39,7 +39,6 @@ public class SQLMakerHintAssociationTableTest {
         maker.setID(makerDao.insert(maker));
         
         association.associate(maker, hint);
-        
         assertFalse(association.findAForB(hint).isEmpty());
         assertFalse(association.findBForA(maker).isEmpty());
     }

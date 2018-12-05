@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
 import ohtu.lukuvinkkikirjasto.dao.HintDAO;
+import ohtu.lukuvinkkikirjasto.dao.MakerDAO;
+import ohtu.lukuvinkkikirjasto.dao.MakerHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.dao.MockHintDAO;
 import ohtu.lukuvinkkikirjasto.dao.MockTagDAO;
 import ohtu.lukuvinkkikirjasto.dao.MockTagHintAssociationTable;
@@ -39,14 +41,16 @@ public class AddHintTest {
     AddHint newHint;
     HintDAO hintDao;
     TagDAO tagDAO;
+    MakerDAO makerDao;
     TagHintAssociationTable connect;
+    MakerHintAssociationTable makerHint;
 
     @Before
     public void setUp() throws Exception {
         hintDao = new MockHintDAO();
         tagDAO = new MockTagDAO();
         connect = new MockTagHintAssociationTable();
-        this.newHint = new AddHint(hintDao, tagDAO, connect);
+        this.newHint = new AddHint(hintDao, tagDAO, makerDao, connect,makerHint);
 
     }
 
@@ -55,6 +59,7 @@ public class AddHintTest {
         AsyncStubIO io = new AsyncStubIO();
         io.pushString("otsikko");
         io.pushString("kommentti");
+        io.pushString("");
         io.pushString("");
         io.pushString(null);
 
@@ -68,6 +73,7 @@ public class AddHintTest {
         AsyncStubIO io = new AsyncStubIO();
         io.pushString("otsikko");
         io.pushString("kommentti");
+        io.pushString("");
         io.pushString("tagi, tagi2");
         io.pushString(null);
 
@@ -82,6 +88,7 @@ public class AddHintTest {
         AsyncStubIO io = new AsyncStubIO();
         io.pushString("otsikko");
         io.pushString("kommentti");
+        io.pushString("");
         io.pushString("video,video,video,video,video,video,video");
         io.pushString(null);
         
@@ -95,6 +102,7 @@ public class AddHintTest {
         AsyncStubIO io = new AsyncStubIO();
         io.pushString("otsikko");
         io.pushString("kommentti");
+        io.pushString("");
         io.pushString("tagi, tagi2");
         io.pushString(null);
 
@@ -102,6 +110,7 @@ public class AddHintTest {
 
         io.pushString("toinen");
         io.pushString("toinen kommentti");
+        io.pushString("");
         io.pushString("tagi, tagi4");
         io.pushString(null);
 
