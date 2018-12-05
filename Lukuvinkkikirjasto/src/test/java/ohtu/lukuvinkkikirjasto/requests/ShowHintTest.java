@@ -23,6 +23,7 @@ import ohtu.lukuvinkkikirjasto.dao.TagDAO;
 import ohtu.lukuvinkkikirjasto.dao.TagHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.hint.Hint;
 import ohtu.lukuvinkkikirjasto.hint.HintClass;
+import ohtu.lukuvinkkikirjasto.maker.Maker;
 import ohtu.lukuvinkkikirjasto.tag.Tag;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -41,7 +42,7 @@ public class ShowHintTest {
     private TagDAO tdao;
     private MakerDAO mdao;
     private TagHintAssociationTable connect;
-    private MakerHintAssociationTable makerConnect;
+    private MakerHintAssociationTable connectMaker;
     private AsyncStubIO io;
     private ShowHint showhint;
     HintClass hint1;
@@ -49,6 +50,7 @@ public class ShowHintTest {
     HintClass hint3;
     Tag tag1;
     Tag tag2;
+    Maker maker1;
 
     public ShowHintTest() {
     }
@@ -66,7 +68,7 @@ public class ShowHintTest {
         this.hdao = new MockHintDAO();
         this.tdao = new MockTagDAO();
         this.mdao = new MockMakerDAO();
-        this.makerConnect = new MockMakerHintAssociationTable();
+        this.connectMaker = new MockMakerHintAssociationTable();
         this.connect = new MockTagHintAssociationTable();
         this.io = new AsyncStubIO();
 
@@ -83,7 +85,11 @@ public class ShowHintTest {
         connect.associate(tag1, hint2);
         connect.associate(tag2, hint2);
 
-        this.showhint = new ShowHint(hdao, tdao, mdao, connect, makerConnect);
+        maker1 = new Maker(0, "Prof. Nieminen");
+        mdao.insert(maker1);
+        connectMaker.associate(maker1,hint1);
+
+        this.showhint = new ShowHint(hdao, tdao, mdao, connect, connectMaker);
 
     }
 
@@ -134,5 +140,13 @@ public class ShowHintTest {
         assertTrue(io.getOutput().toString().contains("luettu: "+sdf.format(d)));
         assertFalse(io.getOutput().toString().contains("Merkitäänkö luetuksi(y/n)"));
 
+    }
+
+    @Test
+    public void MakerIsShown() throws Exception {
+        io.pushInt(0);
+        io.pushString("n");
+        showhint.run(io);
+        assertTrue(io.getOutput().toString().contains(maker1.toString()));
     }
 }

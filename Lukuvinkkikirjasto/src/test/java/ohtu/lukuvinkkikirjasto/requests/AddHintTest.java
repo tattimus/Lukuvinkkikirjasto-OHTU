@@ -128,4 +128,22 @@ public class AddHintTest {
         }
 
     }
+
+    @Test
+    public void MakersCanBeAssignedtoHints() throws Exception {
+
+        AsyncStubIO io = new AsyncStubIO();
+        io.pushString("otsikko");
+        io.pushString("kommentti");
+        io.pushString("tekija1,tekija2");
+        io.pushString("");
+        io.pushString(null);
+
+        newHint.run(io);
+
+        ArrayList<HintClass> hints = new ArrayList<>(hintDao.findAll());
+        for (HintClass h : hints) {
+                assertTrue(connect.findAForB(h).stream().allMatch(tag -> tag.getTag().equals("tekija") || tag.getTag().equals("tekija")));
+        }
+    }
 }
