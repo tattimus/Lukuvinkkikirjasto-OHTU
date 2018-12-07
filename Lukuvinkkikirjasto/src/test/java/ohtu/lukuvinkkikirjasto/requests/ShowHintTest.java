@@ -12,13 +12,18 @@ import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
 import ohtu.lukuvinkkikirjasto.IO.IO;
 import ohtu.lukuvinkkikirjasto.actions.ShowHint;
 import ohtu.lukuvinkkikirjasto.dao.HintDAO;
+import ohtu.lukuvinkkikirjasto.dao.MakerDAO;
+import ohtu.lukuvinkkikirjasto.dao.MakerHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.dao.MockHintDAO;
+import ohtu.lukuvinkkikirjasto.dao.MockMakerDAO;
+import ohtu.lukuvinkkikirjasto.dao.MockMakerHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.dao.MockTagDAO;
 import ohtu.lukuvinkkikirjasto.dao.MockTagHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.dao.TagDAO;
 import ohtu.lukuvinkkikirjasto.dao.TagHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.hint.Hint;
 import ohtu.lukuvinkkikirjasto.hint.HintClass;
+import ohtu.lukuvinkkikirjasto.maker.Maker;
 import ohtu.lukuvinkkikirjasto.tag.Tag;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -35,7 +40,9 @@ public class ShowHintTest {
 
     private HintDAO hdao;
     private TagDAO tdao;
+    private MakerDAO mdao;
     private TagHintAssociationTable connect;
+    private MakerHintAssociationTable connectMaker;
     private AsyncStubIO io;
     private ShowHint showhint;
     HintClass hint1;
@@ -43,6 +50,7 @@ public class ShowHintTest {
     HintClass hint3;
     Tag tag1;
     Tag tag2;
+    Maker maker1;
 
     public ShowHintTest() {
     }
@@ -59,6 +67,8 @@ public class ShowHintTest {
     public void setUp() throws Exception {
         this.hdao = new MockHintDAO();
         this.tdao = new MockTagDAO();
+        this.mdao = new MockMakerDAO();
+        this.connectMaker = new MockMakerHintAssociationTable();
         this.connect = new MockTagHintAssociationTable();
         this.io = new AsyncStubIO();
 
@@ -75,7 +85,11 @@ public class ShowHintTest {
         connect.associate(tag1, hint2);
         connect.associate(tag2, hint2);
 
-        this.showhint = new ShowHint(hdao, tdao, connect);
+        maker1 = new Maker(0, "Prof. Nieminen");
+        mdao.insert(maker1);
+        connectMaker.associate(maker1,hint1);
+
+        this.showhint = new ShowHint(hdao, tdao, mdao, connect, connectMaker);
 
     }
 
@@ -126,5 +140,13 @@ public class ShowHintTest {
         assertTrue(io.getOutput().toString().contains("luettu: "+sdf.format(d)));
         assertFalse(io.getOutput().toString().contains("Merkitäänkö luetuksi(y/n)"));
 
+    }
+
+    @Test
+    public void MakerIsShown() throws Exception {
+        io.pushInt(0);
+        io.pushString("n");
+        showhint.run(io);
+        assertTrue(io.getOutput().toString().contains(maker1.toString()));
     }
 }

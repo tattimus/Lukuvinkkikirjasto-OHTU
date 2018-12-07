@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
 import ohtu.lukuvinkkikirjasto.dao.MockHintDAO;
+import ohtu.lukuvinkkikirjasto.dao.MockMakerDAO;
+import ohtu.lukuvinkkikirjasto.dao.MockMakerHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.actions.AddHint;
 import ohtu.lukuvinkkikirjasto.actions.DeleteHint;
 import ohtu.lukuvinkkikirjasto.actions.ModifyHint;
@@ -35,8 +37,10 @@ public class Stepdefs {
     AsyncStubIO stubIO = new AsyncStubIO();
     MockHintDAO mockDao = new MockHintDAO();
     MockTagDAO tagDAO = new MockTagDAO();
+    MockMakerDAO makerDAO = new MockMakerDAO();
 
-    MockTagHintAssociationTable connect = new MockTagHintAssociationTable();
+    MockTagHintAssociationTable connectTag = new MockTagHintAssociationTable();
+    MockMakerHintAssociationTable connectMaker = new MockMakerHintAssociationTable();
 
     AddHint addHint;
     QueryHints queryHints;
@@ -50,13 +54,13 @@ public class Stepdefs {
 
     @Given("^Ohjelma on käynnistetty$")
     public void ohjelma_on_käynnistetty() throws Throwable {
-        addHint = new AddHint(mockDao, tagDAO, connect);
+        addHint = new AddHint(mockDao, tagDAO, makerDAO, connectTag, connectMaker);
         queryHints = new QueryHints(mockDao);
-        searchTag = new SearchByTag(mockDao, tagDAO, connect);
+        searchTag = new SearchByTag(mockDao, tagDAO, connectTag);
         deleteHint = new DeleteHint(mockDao);
 
-        showHint = new ShowHint(mockDao, tagDAO, connect);
-        modifyHint = new ModifyHint(mockDao,tagDAO,connect);
+        showHint = new ShowHint(mockDao, tagDAO, makerDAO, connectTag, connectMaker);
+        modifyHint = new ModifyHint(mockDao,tagDAO,connectTag);
         app = new App(stubIO, addHint, queryHints,searchTag, showHint, deleteHint,modifyHint);
 
         app.start();
@@ -70,6 +74,7 @@ public class Stepdefs {
         //Syötä otsikko ja kommentti
         stubIO.pushString(otsikko);
         stubIO.pushString(kommentti);
+        stubIO.pushString("\n"); // ei tekijää
         stubIO.pushString("\n"); //ei tageja
         stubIO.pushString("\n"); //ei URLia
         wait(500);
@@ -81,6 +86,7 @@ public class Stepdefs {
         wait(500);
         stubIO.pushString(otsikko);
         stubIO.pushString(kommentti);
+        stubIO.pushString("\n"); //tekijä tyhjäksi
         stubIO.pushString(tagit);
         stubIO.pushString("\n");
         wait(500);
@@ -98,7 +104,7 @@ public class Stepdefs {
         Optional<HintClass> h = mockDao.findAll().stream().filter(hint -> hint.getTitle().equals(otsikko) && hint.getComment().equals(kommentti)).findAny();
         assertTrue(stubIO.getOutput().contains("Lisätty vinkki \"" + otsikko + "\""));
         assertTrue(h.isPresent());
-        assertTrue(connect.findAForB(h.get()).isEmpty());
+        assertTrue(connectTag.findAForB(h.get()).isEmpty());
     }
 
     @Then("^Kirjastoon on lisätty vinkki, jolla on otsikkona \"([^\"]*)\" ja kommenttina \"([^\"]*)\" ja tagina \"([^\"]*)\"$")
@@ -109,7 +115,7 @@ public class Stepdefs {
         assertTrue(stubIO.getOutput().contains("Lisätty vinkki \"" + otsikko + "\""));
         assertTrue(h.isPresent());
         for (Tag t : savedTags) {
-            assertTrue(connect.findBForA(t).stream().anyMatch(hint -> hint.getID().equals(h.get().getID())));
+            assertTrue(connectTag.findBForA(t).stream().anyMatch(hint -> hint.getID().equals(h.get().getID())));
         }
 
     }
@@ -120,6 +126,7 @@ public class Stepdefs {
         stubIO.pushInt(app.findAction(addHint.getHint()));
         wait(500);
         //Jätä kaikki kentät tyhjiksi
+        stubIO.pushString(null);
         stubIO.pushString(null);
         stubIO.pushString(null);
         stubIO.pushString(null);
@@ -191,8 +198,9 @@ public class Stepdefs {
         wait(500);
         stubIO.pushString(otsikko);
         stubIO.pushString(kuvaus);
+        stubIO.pushString("\n"); //ei tekijää
         stubIO.pushString(tag);
-        stubIO.pushString(null);
+        stubIO.pushString("\n");
         wait(500);
     }
 
@@ -202,7 +210,7 @@ public class Stepdefs {
         mockDao.insert(h);
         Tag t = new Tag(0, tag);
         tagDAO.insert(t);
-        this.connect.associate(t, h);
+        this.connectTag.associate(t, h);
     }
 
     @When("^Käyttäjä valitsee vinkkien listauksen$")
@@ -217,7 +225,8 @@ public class Stepdefs {
         wait(500);
         stubIO.pushString(otsikko);
         stubIO.pushString(kuvaus);
-        stubIO.pushString("");
+        stubIO.pushString("\n"); // ei tekijää
+        stubIO.pushString(tag);
         stubIO.pushString(url);
         wait(500);
     }
@@ -355,7 +364,7 @@ public class Stepdefs {
     @Then("^Vinkillä (\\d+) on tageina \"([^\"]*)\"$")
     public void vinkillä_on_tageina(int id, String tags) throws Throwable {
         String[] tagsSplit = tags.split(",");
-        String[] tagsFromDB = connect.findAForB(mockDao.findOne(id)).stream().map(tag -> tag.getTag()).collect(Collectors.toList()).toArray(new String[0]);
+        String[] tagsFromDB = connectTag.findAForB(mockDao.findOne(id)).stream().map(tag -> tag.getTag()).collect(Collectors.toList()).toArray(new String[0]);
         
         Arrays.sort(tagsSplit);
         Arrays.sort(tagsFromDB);
