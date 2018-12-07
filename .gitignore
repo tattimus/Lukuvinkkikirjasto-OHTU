@@ -10,7 +10,7 @@ nbdist/
 .nb-gradle/
 
 ### Gradle ###
-.gradle
+#.gradle
 /build/
 /Lukuvinkkikirjasto/gradle/
 /Lukuvinkkikirjasto/gradlew
