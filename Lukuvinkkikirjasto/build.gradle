@@ -1,5 +1,5 @@
 plugins {
-  id 'com.github.johnrengelman.shadow' version '2.0.1'
+  id 'com.github.johnrengelman.shadow' version '4.0.2'
 }
 
 apply plugin: 'java'
@@ -36,6 +36,10 @@ repositories {
 dependencies {
     // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.25.2'
+
+    compile group: 'org.json', name: 'json', version: '20180813'
+
+    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.12.0'
 
     // TODO: Add dependencies here ...
     // You can read more about how to add dependency here:
