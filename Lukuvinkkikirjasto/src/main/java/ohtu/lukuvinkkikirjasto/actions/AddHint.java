@@ -11,12 +11,16 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ohtu.lukuvinkkikirjasto.IO.IO;
+import ohtu.lukuvinkkikirjasto.dao.DAO;
 import ohtu.lukuvinkkikirjasto.dao.HintDAO;
+import ohtu.lukuvinkkikirjasto.dao.MakerDAO;
+import ohtu.lukuvinkkikirjasto.dao.MakerHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.dao.SQLTagDAO;
 import ohtu.lukuvinkkikirjasto.dao.TagDAO;
 import ohtu.lukuvinkkikirjasto.dao.TagHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.hint.Hint;
 import ohtu.lukuvinkkikirjasto.hint.HintClass;
+import ohtu.lukuvinkkikirjasto.maker.Maker;
 import ohtu.lukuvinkkikirjasto.tag.Tag;
 
 /**
@@ -29,11 +33,16 @@ public class AddHint extends Action {
     private TagDAO tdao;
     private HintClass hint;
     private TagHintAssociationTable tagHint;
+    private MakerDAO mdao;
+    private MakerHintAssociationTable makerHint;
 
-    public AddHint(HintDAO hdao, TagDAO tdao, TagHintAssociationTable tagHint) {
+
+    public AddHint(HintDAO hdao, TagDAO tdao, MakerDAO mdao, TagHintAssociationTable tagHint, MakerHintAssociationTable makerHint) {
         this.hdao = hdao;
         this.tdao = tdao;
         this.tagHint = tagHint;
+        this.mdao = mdao;
+        this.makerHint = makerHint;
 
     }
 
@@ -47,21 +56,11 @@ public class AddHint extends Action {
         return "Lisää vinkki";
     }
 
-    @Override
-    public void run(IO io) {
-        try {
-            String title = io.readString("Vinkin otsikko: ");
-            String comment = io.readString("Vinkin kommentti: ");
-            String tagit = io.readString("Vinkin tagit (pilkulla eroteltuina): ");
-            String url = io.readString("Vinkkiin liittyvä URL: ");
+    private void addTags(String input, HintClass hint, IO io) {
 
-            HintClass hint = new HintClass(null, title, comment, url);
-            int hintId = hdao.insert(hint);
-            hint.setID(hintId);
-            
-            List<String> tags = new ArrayList<>();
+        List<String> tags = new ArrayList<>();
 
-            Arrays.stream(tagit.split(",")).filter(s -> !s.isEmpty()).forEach(tags::add);
+            Arrays.stream(input.split(",")).filter(s -> !s.isEmpty()).forEach(tags::add);
             
             if (hint.getUrl() != null && !hint.getUrl().isEmpty()) {
                 if (hint.getUrl().contains("youtube.com")) {
@@ -79,7 +78,40 @@ public class AddHint extends Action {
                 } catch (Exception ex) {
                     io.printLine("Tagin "+tag+" lisääminen epäonnistui: "+ex.getMessage());
                 }
-            });
+        });
+    }
+
+    private void addMakers(String input, HintClass hint, IO io) {
+
+        List<String> makers = new ArrayList<>();
+
+        Arrays.stream(input.split(",")).filter(s -> !s.isEmpty()).forEach(makers::add);
+
+            makers.stream().map(s -> s.trim()).distinct().forEach(maker -> {
+                try {
+                    Maker m = mdao.insertOrGet(new Maker(null, maker));
+                    makerHint.associate(m, hint);
+                } catch (Exception ex) {
+                    io.printLine("Tekijän "+maker+" lisääminen epäonnistui: "+ex.getMessage());
+                }
+        });
+    }
+
+    @Override
+    public void run(IO io) {
+        try {
+            String title = io.readString("Vinkin otsikko: ");
+            String comment = io.readString("Vinkin kommentti: ");
+            String tekijat = io.readString("Tekijät (pilkulla eroteltuina): ");
+            String tagit = io.readString("Vinkin tagit (pilkulla eroteltuina): ");
+            String url = io.readString("Vinkkiin liittyvä URL: ");
+
+            HintClass hint = new HintClass(null, title, comment, url);
+            int hintId = hdao.insert(hint);
+            hint.setID(hintId);
+
+            addTags(tagit, hint, io);
+            addMakers(tekijat, hint, io);
             
             io.printLine("Lisätty vinkki \"" + hint.getTitle() + "\"");
         } catch (Exception ex) {
