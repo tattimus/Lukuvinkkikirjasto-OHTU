@@ -60,7 +60,7 @@ public class Stepdefs {
         deleteHint = new DeleteHint(mockDao);
 
         showHint = new ShowHint(mockDao, tagDAO, makerDAO, connectTag, connectMaker);
-        modifyHint = new ModifyHint(mockDao,tagDAO,connectTag);
+        modifyHint = new ModifyHint(mockDao,tagDAO,makerDAO, connectTag, connectMaker);
         app = new App(stubIO, addHint, queryHints,searchTag, showHint, deleteHint,modifyHint);
 
         app.start();
@@ -302,6 +302,7 @@ public class Stepdefs {
         stubIO.pushString("");
         stubIO.pushString("");
         stubIO.pushString("");
+        stubIO.pushString("");
 
         wait(500);
     }
@@ -357,7 +358,7 @@ public class Stepdefs {
     @When("^Lisää uudet tagit \"([^\"]*)\"$")
     public void lisää_uudet_tagit(String tags) throws Throwable {
         stubIO.pushString(tags);
-        
+
         wait(500);
     }
 
@@ -370,6 +371,13 @@ public class Stepdefs {
         Arrays.sort(tagsFromDB);
         
         assertArrayEquals(tagsSplit, tagsFromDB);
+    }
+
+    @When("^Ei lisää uusia tekijoita$")
+    public void ei_lisää_uusia_tekijoita() throws Throwable {
+        stubIO.pushString("\n");
+        stubIO.pushString("n");
+        System.out.println(stubIO.getOutput());
     }
 
     private void wait(int millis) {

@@ -27,6 +27,7 @@ Feature: Käyttäjänä voin muokata vinkkejä
     And Syöttää muokattavan vinkin ID:ksi 0 ja otsikoksi "test_otsikko" ja jättää muut kentät tyhjäksi, mutta muokkaa tageja
     And Poistaa tagin "tagi" painamalla "y"
     And Lisää uudet tagit "testi,test_tag"
+    And Ei lisää uusia tekijoita
     And Varmistaa muutokset valitsemalla "y"
     Then Ohjelma tulostaa "Vinkin 0 tiedot muokattu"
     Then Vinkin 0 otsikko on "test_otsikko"
