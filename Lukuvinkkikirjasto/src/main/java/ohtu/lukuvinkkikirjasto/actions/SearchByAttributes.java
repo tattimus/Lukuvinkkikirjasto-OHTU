@@ -7,10 +7,19 @@ package ohtu.lukuvinkkikirjasto.actions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import ohtu.lukuvinkkikirjasto.IO.IO;
 import ohtu.lukuvinkkikirjasto.dao.HintDAO;
+import ohtu.lukuvinkkikirjasto.dao.MakerDAO;
+import ohtu.lukuvinkkikirjasto.dao.MakerHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.hint.HintClass;
+import ohtu.lukuvinkkikirjasto.maker.Maker;
 
 /**
  *
@@ -19,11 +28,17 @@ import ohtu.lukuvinkkikirjasto.hint.HintClass;
 public class SearchByAttributes extends Action {
 
     private HintDAO hdao;
+    private MakerDAO mdao;
+    private MakerHintAssociationTable maker_association;
     private IO io;
+    private List<Integer> searchResults;
 
-    public SearchByAttributes(HintDAO hdao) {
+    public SearchByAttributes(HintDAO hdao, MakerDAO mdao, MakerHintAssociationTable m_association) {
 
         this.hdao = hdao;
+        this.mdao = mdao;
+        this.maker_association = m_association;
+        this.searchResults = new ArrayList<>();
     }
 
     @Override
@@ -38,34 +53,82 @@ public class SearchByAttributes extends Action {
 
     @Override
     public void run(IO io) {
-        this.io=io;
+        this.io = io;
         String attribute = io.readString("Syötä hakusana: ");
-        List<HintClass> list = new ArrayList<>();
-        list=searchByWord(attribute.toLowerCase());
-        list.forEach(hint-> {
-          io.printLine("");
-          io.printLine(hint);
-        });
+        searchByWord(attribute.toLowerCase());
+        printResults();
+
+        this.searchResults.clear();
 
     }
 
-    private List<HintClass> searchByWord(String attribute) {
+    private void searchByWord(String attribute) {
 
-        List<String> fields = Arrays.asList("otsikko", "kommentti");
-        List<HintClass> hints = new ArrayList<>();
-        try {
-            for (String s : fields) {
-               List<HintClass> list = hdao.search(s, attribute);
-               list.forEach(hint -> {
-                   if(!hints.contains(hint)) hints.add(hint);
-               });
-            }
-        } catch (Exception e) {
-            io.printLine("virhe haussa");
-            
+        for (int i = 1; i <= 3; i++) {
+            findHints(i, attribute);
 
         }
-        return hints;
+    }
+
+    private void findHints(int prio, String attribute) {
+        ArrayList<Integer> tulokset = new ArrayList<>();
+        Map<Integer, String> fields = new HashMap<>();
+        fields.put(1, "otsikko");
+        fields.put(2, "tekija");
+        fields.put(3, "kommentti");
+
+        if (prio != 2) {
+            try {
+
+                List<HintClass> list = hdao.search(fields.get(prio), attribute);
+                for (HintClass h : list) {
+                    if (!this.searchResults.contains(h.getID())) {
+                        this.searchResults.add(h.getID());
+                    }
+                }
+            } catch (Exception e) {
+                io.printLine("virhe haussa");
+
+            }
+        } else {
+            try {
+                List<Maker> makers = mdao.findByMaker(attribute);
+                makers.forEach(maker -> {
+                    try {
+                        List<HintClass> makersHints = this.maker_association.findBForA(maker);
+                        for (HintClass h : makersHints) {
+                            if (!this.searchResults.contains(h.getID())) {
+                                this.searchResults.add(h.getID());
+                            }
+                        }
+
+                    } catch (Exception ex) {
+                    }
+                });
+            } catch (Exception e) {
+            }
+        }
+
+    }
+
+    private void printResults() {
+        
+        if(searchResults.isEmpty()) io.printLine("\nHakusanalla ei löytynyt tuloksia");
+        this.searchResults.forEach(hint -> {
+            io.printLine("");
+            try {
+                HintClass h = hdao.findOne(hint);
+                io.printLine(h);
+                List<Maker> makers = this.maker_association.findAForB(h);
+                String tekijat = "\ttekijät: ";
+                for (Maker m : makers) {
+                    tekijat += m.toString() + " ";
+                }
+                io.printLine(tekijat);
+            } catch (Exception ex) {
+
+            }
+        });
     }
 
 }

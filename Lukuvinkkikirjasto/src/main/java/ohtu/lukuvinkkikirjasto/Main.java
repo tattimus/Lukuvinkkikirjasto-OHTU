@@ -45,7 +45,7 @@ public class Main {
                 new ShowHint(hdao, tdao, mdao,tagAssociation, makerAssociation),
                 new DeleteHint(hdao),
                 new ModifyHint(hdao, tdao, tagAssociation),
-                new SearchByAttributes(hdao));
+                new SearchByAttributes(hdao, mdao, makerAssociation));
 
         app.start();
 

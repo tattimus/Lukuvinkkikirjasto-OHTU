@@ -20,6 +20,7 @@ import ohtu.lukuvinkkikirjasto.actions.AddHint;
 import ohtu.lukuvinkkikirjasto.actions.DeleteHint;
 import ohtu.lukuvinkkikirjasto.actions.ModifyHint;
 import ohtu.lukuvinkkikirjasto.actions.QueryHints;
+import ohtu.lukuvinkkikirjasto.actions.SearchByAttributes;
 import ohtu.lukuvinkkikirjasto.actions.SearchByTag;
 import ohtu.lukuvinkkikirjasto.actions.ShowHint;
 import ohtu.lukuvinkkikirjasto.dao.MockTagDAO;
@@ -28,6 +29,7 @@ import ohtu.lukuvinkkikirjasto.dao.TagDAO;
 import ohtu.lukuvinkkikirjasto.dao.TagHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.hint.Hint;
 import ohtu.lukuvinkkikirjasto.hint.HintClass;
+import ohtu.lukuvinkkikirjasto.maker.Maker;
 import ohtu.lukuvinkkikirjasto.tag.Tag;
 import org.junit.Assert;
 import static org.junit.Assert.*;
@@ -48,6 +50,8 @@ public class Stepdefs {
     DeleteHint deleteHint;
     ShowHint showHint;
     ModifyHint modifyHint;
+    SearchByAttributes searchByAttributes;
+    
 
 
     App app;
@@ -61,7 +65,8 @@ public class Stepdefs {
 
         showHint = new ShowHint(mockDao, tagDAO, makerDAO, connectTag, connectMaker);
         modifyHint = new ModifyHint(mockDao,tagDAO,connectTag);
-        app = new App(stubIO, addHint, queryHints,searchTag, showHint, deleteHint,modifyHint);
+        searchByAttributes=new SearchByAttributes(mockDao, makerDAO, connectMaker);
+        app = new App(stubIO, addHint, queryHints,searchTag, showHint, deleteHint,modifyHint, searchByAttributes);
 
         app.start();
     }
@@ -144,12 +149,34 @@ public class Stepdefs {
         stubIO.pushInt(app.findAction("Lopeta"));
         app.join(500);
     }
+    
+    @Given("^Tietokantaan on tallennettu vinkki otsikolla \"([^\"]*)\", kuvauksella \"([^\"]*)\" ja tekijällä \"([^\"]*)\"$")
+    public void tietokantaan_on_tallennettu_vinkki_otsikolla_tekijällä_kuvauksella(String otsikko, String kuvaus, String tekija) throws Throwable {
+        HintClass hint=new HintClass(null, otsikko, kuvaus, "");
+        int id=mockDao.insert(hint);
+        hint.setID(id);
+        Maker maker=new Maker(null, tekija);
+        int id2=makerDAO.insert(maker);
+        maker.setID(id2);
+        connectMaker.associate(maker, hint);
+        
+        
+        
+    }
 
     @When("^Käyttäjä valitsee tagilla hakemisen ja antaa tagin \"([^\"]*)\"$")
     public void käyttäjä_valitsee_tagilla_hakemisen_ja_antaa_tagin(String tag) throws Throwable {
         stubIO.pushInt(app.findAction(searchTag.getHint()));
         wait(500);
         stubIO.pushString(tag);
+        wait(500);
+    }
+    
+    @When("^Käyttäjä valitsee vapaan haun ja antaa hakusanan \"([^\"]*)\"$")
+    public void käyttäjä_valitsee_vapaan_haun_ja_antaa_hakusanan(String word) throws Throwable {
+        stubIO.pushInt(app.findAction(searchByAttributes.getHint()));
+        wait(500);
+        stubIO.pushString(word);
         wait(500);
     }
 

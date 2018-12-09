@@ -8,8 +8,13 @@ package ohtu.lukuvinkkikirjasto.requests;
 import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
 import ohtu.lukuvinkkikirjasto.actions.SearchByAttributes;
 import ohtu.lukuvinkkikirjasto.dao.HintDAO;
+import ohtu.lukuvinkkikirjasto.dao.MakerDAO;
+import ohtu.lukuvinkkikirjasto.dao.MakerHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.dao.MockHintDAO;
+import ohtu.lukuvinkkikirjasto.dao.MockMakerDAO;
+import ohtu.lukuvinkkikirjasto.dao.MockMakerHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.hint.HintClass;
+import ohtu.lukuvinkkikirjasto.maker.Maker;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -25,12 +30,15 @@ public class SearchByAttributesTest {
 
     private SearchByAttributes openSearch;
     private HintDAO hdao;
+    private MakerDAO mdao;
+    private MakerHintAssociationTable association;
     private AsyncStubIO io;
 
     private HintClass hint1;
     private HintClass hint2;
     private HintClass hint3;
     private HintClass hint4;
+    private Maker maker;
 
     public SearchByAttributesTest() {
     }
@@ -47,7 +55,10 @@ public class SearchByAttributesTest {
     public void setUp() throws Exception {
         this.io = new AsyncStubIO();
         this.hdao = new MockHintDAO();
-        this.openSearch = new SearchByAttributes(hdao);
+        this.mdao=new MockMakerDAO();
+        this.association=new MockMakerHintAssociationTable();
+        
+        this.openSearch = new SearchByAttributes(hdao, mdao, association);
 
         hint1 = new HintClass(null, "Tietoliikenteen perusteet", "Johdatus tietoverkkoihin", "www.cs.helsinki.fi/kirja");
         int id = hdao.insert(hint1);
@@ -62,6 +73,13 @@ public class SearchByAttributesTest {
         hint4 = new HintClass(null, "Tietokoneen toiminta", "tietokoneen toiminnan perusteita", "www.cs.helsinki.fi/kirja");
         id = hdao.insert(hint4);
         hint4.setID(id);
+        
+        maker=new Maker(null, "William Stallings");
+        id=mdao.insert(maker);
+        maker.setID(id);
+        association.associate(maker, hint1);
+        
+        
 
     }
 
@@ -86,11 +104,18 @@ public class SearchByAttributesTest {
         this.openSearch.run(io);
         assertTrue(io.getOutput().stream().filter(s -> s.contains("Kommentti:")).allMatch(s -> s.contains(hint2.getComment())));
     }
+    @Test
+    public void returnsCorrectMakerWithName() throws Exception{
+        io.pushString(maker.getMaker());
+        this.openSearch.run(io);
+        assertTrue(io.getOutput().stream().filter(s -> s.contains("tekijät:")).allMatch(s -> s.contains(maker.getMaker())));
+    }
 
     @Test
     public void ReturnsCorrectHintswithPartialAttributes() throws Exception {
         io.pushString("Laskenn");
         this.openSearch.run(io);
+        
         assertTrue(io.getOutput().stream().filter(s -> s.contains("Otsikko:")).allMatch(s -> s.contains(hint2.getTitle())));
     }
 
@@ -108,5 +133,16 @@ public class SearchByAttributesTest {
         io.pushString("toiminta");
         this.openSearch.run(io);
         assertTrue(io.getOutput().toString().indexOf(hint4.getTitle()) < io.getOutput().toString().indexOf(hint3.getTitle()));
+    }
+    @Test
+    public void ReturnsHintsInCorrectOrder3() throws Exception {
+        Maker maker2 = new Maker(null, "Toimittajat");
+        int id = mdao.insert(maker2);
+        maker2.setID(id);
+        association.associate(maker2, hint1);
+        io.pushString("toimi");
+        this.openSearch.run(io);
+        assertTrue(io.getOutput().toString().indexOf(hint4.getTitle()) < io.getOutput().toString().indexOf(hint1.getTitle()));
+        assertTrue(io.getOutput().toString().indexOf(hint1.getTitle()) < io.getOutput().toString().indexOf(hint3.getTitle()));
     }
 }

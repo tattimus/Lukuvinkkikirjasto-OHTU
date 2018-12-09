@@ -73,4 +73,19 @@ public class MockMakerDAO implements MakerDAO {
         throw new UnsupportedOperationException("Makers cannot be updated");
     }
 
+    @Override
+    public List<Maker> findByMaker(String makerName) throws Exception {
+        List<Maker> result=new ArrayList<>();
+        Iterator it=makersInverse.entrySet().iterator();
+        while(it.hasNext()) {
+            
+            Map.Entry e=(Map.Entry)it.next();
+            if(e.getKey().toString().toLowerCase().contains(makerName)) {
+                Maker maker=new Maker(e.getValue().hashCode(), e.getKey().toString());
+                result.add(maker);
+            }
+        }
+        return result;
+    }
+
 }
