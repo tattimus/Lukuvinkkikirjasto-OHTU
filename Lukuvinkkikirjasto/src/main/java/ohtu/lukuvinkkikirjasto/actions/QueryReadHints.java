@@ -33,7 +33,7 @@ public class QueryReadHints extends Action {
             for (int i = 0; i < tagit.size(); i++) {
                 if(tagit.get(i).getTimestamp()!=null){
                     io.printLine("");
-                    io.printLine(tagit.get(i));
+                    io.printLine(tagit.get(i).listingAll());
                 }
             }
         } catch (Exception ex) {
