@@ -51,8 +51,6 @@ public class Stepdefs {
     ShowHint showHint;
     ModifyHint modifyHint;
     SearchByAttributes searchByAttributes;
-    
-
 
     App app;
 
@@ -64,9 +62,9 @@ public class Stepdefs {
         deleteHint = new DeleteHint(mockDao);
 
         showHint = new ShowHint(mockDao, tagDAO, makerDAO, connectTag, connectMaker);
-        modifyHint = new ModifyHint(mockDao,tagDAO,connectTag);
-        searchByAttributes=new SearchByAttributes(mockDao, makerDAO, connectMaker);
-        app = new App(stubIO, addHint, queryHints,searchTag, showHint, deleteHint,modifyHint, searchByAttributes);
+        modifyHint = new ModifyHint(mockDao, tagDAO, connectTag);
+        searchByAttributes = new SearchByAttributes(mockDao, makerDAO, connectMaker);
+        app = new App(stubIO, addHint, queryHints, searchTag, showHint, deleteHint, modifyHint, searchByAttributes);
 
         app.start();
     }
@@ -149,19 +147,17 @@ public class Stepdefs {
         stubIO.pushInt(app.findAction("Lopeta"));
         app.join(500);
     }
-    
+
     @Given("^Tietokantaan on tallennettu vinkki otsikolla \"([^\"]*)\", kuvauksella \"([^\"]*)\" ja tekijällä \"([^\"]*)\"$")
     public void tietokantaan_on_tallennettu_vinkki_otsikolla_tekijällä_kuvauksella(String otsikko, String kuvaus, String tekija) throws Throwable {
-        HintClass hint=new HintClass(null, otsikko, kuvaus, "");
-        int id=mockDao.insert(hint);
+        HintClass hint = new HintClass(null, otsikko, kuvaus, "");
+        int id = mockDao.insert(hint);
         hint.setID(id);
-        Maker maker=new Maker(null, tekija);
-        int id2=makerDAO.insert(maker);
+        Maker maker = new Maker(null, tekija);
+        int id2 = makerDAO.insert(maker);
         maker.setID(id2);
         connectMaker.associate(maker, hint);
-        
-        
-        
+
     }
 
     @When("^Käyttäjä valitsee tagilla hakemisen ja antaa tagin \"([^\"]*)\"$")
@@ -171,7 +167,7 @@ public class Stepdefs {
         stubIO.pushString(tag);
         wait(500);
     }
-    
+
     @When("^Käyttäjä valitsee vapaan haun ja antaa hakusanan \"([^\"]*)\"$")
     public void käyttäjä_valitsee_vapaan_haun_ja_antaa_hakusanan(String word) throws Throwable {
         stubIO.pushInt(app.findAction(searchByAttributes.getHint()));
@@ -210,13 +206,21 @@ public class Stepdefs {
         HintClass hint = mockDao.findOne(id);
         assertTrue(hint.getTimestamp() == null);
     }
-    
+
     @Then("Vinkin (\\d+) lukukuittaus tulostuu oikein$")
     public void Vinkin_lukukuittaus_tulostuu(int id) throws Throwable {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String s=sdf.format(mockDao.findOne(id).getTimestamp());
+        String s = sdf.format(mockDao.findOne(id).getTimestamp());
 
-        assertTrue(stubIO.getOutput().stream().filter(line -> line.contains("luettu: "+ s)).findAny().isPresent());
+        assertTrue(stubIO.getOutput().stream().filter(line -> line.contains("luettu: " + s)).findAny().isPresent());
+    }
+
+    @Then("^tulosteessa on sana \"([^\"]*)\" ennen sanaa \"([^\"]*)\"$")
+    public void sana_on_ennen_sanaa(String sana, String toinenSana) throws Throwable {
+        String s = stubIO.getOutput().toString();
+        System.out.println(s);
+        System.out.println("Eka "+ sana +" Toka "+toinenSana);
+        assertTrue(s.indexOf(sana) < s.indexOf(toinenSana));
     }
 
     @Given("^Tietokantaan on tallennettu vinkki otsikkolla \"([^\"]*)\", kuvauksella \"([^\"]*)\" ja tagilla \"([^\"]*)\"$")
@@ -325,21 +329,20 @@ public class Stepdefs {
     public void syöttää_muokattavan_vinkin_ID_ksi_ja_otsikoksi_ja_jättää_muut_kentät_tyhjäksi(int id, String title) throws Throwable {
         stubIO.pushInt(id);
         stubIO.pushString(title);
-        
+
         stubIO.pushString("");
         stubIO.pushString("");
         stubIO.pushString("");
 
         wait(500);
     }
-    
+
     @When("^Peruu muutokset valitsemalla \"([^\"]*)\"$")
     public void peruu_muutokset_valitsemalla(String selection) throws Throwable {
         stubIO.pushString(selection);
 
         wait(500);
     }
-
 
     @When("^Varmistaa muutokset valitsemalla \"([^\"]*)\"$")
     public void varmistaa_muutokset_valitsemalla(String selection) throws Throwable {
@@ -352,17 +355,17 @@ public class Stepdefs {
     public void vinkin_otsikko_on(int id, String title) throws Throwable {
         assertEquals(title, mockDao.findOne(id).getTitle());
     }
-    
+
     @Then("^Vinkin ID (\\d+) Aikaleima tulostuu$")
     public void vinkin_ID_Aikaleima_tulostuu(int id) throws Throwable {
-        ohjelma_tulostaa(mockDao.findOne(id).getTimestamp().toString().substring(0,16));
+        ohjelma_tulostaa(mockDao.findOne(id).getTimestamp().toString().substring(0, 16));
     }
-    
+
     @Then("^Vinkin ID (\\d+) Aikaleima ei tulostuu$")
     public void vinkin_ID_Aikaleima_ei_tulostuu(int id) throws Throwable {
         assertFalse(stubIO.getOutput().stream().filter(line -> line.contains("luettu")).findAny().isPresent());
     }
-    
+
     @When("^Syöttää muokattavan vinkin ID:ksi (\\d+) ja otsikoksi \"([^\"]*)\" ja jättää muut kentät tyhjäksi, mutta muokkaa tageja$")
     public void syöttää_muokattavan_vinkin_ID_ksi_ja_otsikoksi_ja_jättää_muut_kentät_tyhjäksi_mutta_muokkaa_tageja(int id, String title) throws Throwable {
         stubIO.pushInt(id);
@@ -370,21 +373,21 @@ public class Stepdefs {
 
         stubIO.pushString("");
         stubIO.pushString("");
-        
+
         wait(500);
     }
 
     @When("^Poistaa tagin \"([^\"]*)\" painamalla \"([^\"]*)\"$")
     public void poistaa_tagin_painamalla(String tag, String action) throws Throwable {
         stubIO.pushString(action);
-        
+
         wait(500);
     }
 
     @When("^Lisää uudet tagit \"([^\"]*)\"$")
     public void lisää_uudet_tagit(String tags) throws Throwable {
         stubIO.pushString(tags);
-        
+
         wait(500);
     }
 
@@ -392,10 +395,10 @@ public class Stepdefs {
     public void vinkillä_on_tageina(int id, String tags) throws Throwable {
         String[] tagsSplit = tags.split(",");
         String[] tagsFromDB = connectTag.findAForB(mockDao.findOne(id)).stream().map(tag -> tag.getTag()).collect(Collectors.toList()).toArray(new String[0]);
-        
+
         Arrays.sort(tagsSplit);
         Arrays.sort(tagsFromDB);
-        
+
         assertArrayEquals(tagsSplit, tagsFromDB);
     }
 

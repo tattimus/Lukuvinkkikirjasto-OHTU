@@ -28,4 +28,12 @@ Feature: Käyttäjänä voin hakea vinkkejä vapaalla haulla
     Then Ohjelma tulostaa "Hakusanalla ei löytynyt tuloksia"
     And Ohjelma pysähtyy
 
-
+  Scenario: Vinkit tulostuvat oikeassa järjestyksessä
+    Given Ohjelma on käynnistetty
+    And Tietokantaan on tallennettu vinkki otsikolla "Ensimmäinen vinkki", kuvauksella "Tietoverkkojen perustiedot" ja tekijällä "tekijä"
+    And Tietokantaan on tallennettu vinkki otsikolla "Tietokoneen toiminta", kuvauksella "kuvaus" ja tekijällä "tekijä"
+    And Tietokantaan on tallennettu vinkki otsikolla "Kolmas vinkki", kuvauksella "kuvaus" ja tekijällä "Tieto Oyj"
+    When Käyttäjä valitsee vapaan haun ja antaa hakusanan "tieto"
+    Then tulosteessa on sana "Tietokoneen" ennen sanaa "Ensimmäinen"
+    And tulosteessa on sana "Kolmas" ennen sanaa "Ensimmäinen"
+    And Ohjelma pysähtyy
