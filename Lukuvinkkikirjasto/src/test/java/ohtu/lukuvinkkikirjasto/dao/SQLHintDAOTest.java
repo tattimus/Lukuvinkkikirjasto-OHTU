@@ -6,6 +6,8 @@
 package ohtu.lukuvinkkikirjasto.dao;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import ohtu.lukuvinkkikirjasto.database.SQLiteDatabase;
 import ohtu.lukuvinkkikirjasto.hint.HintClass;
 import org.junit.Before;
@@ -78,7 +80,7 @@ public class SQLHintDAOTest {
     }
     @Test
     public void testSearch() throws Exception {
-        HintClass vinkki=new HintClass(null, "Computer Organization and Architecture", "kurssikirja", "https://www.adlibris.com/fi/e-kirja/computer-organization-and-architecture-global-edition-9781292096865");
+        HintClass vinkki=new HintClass(null, "Computer", "kurssikirja", "https://www.adlibris.com/fi/e-kirja/computer-organization-and-architecture-global-edition-9781292096865");
         vinkki.setID(vinkkiDao.insert(vinkki));
         assertTrue(vinkkiDao.search("otsikko", "computer").stream().anyMatch(hint-> hint.getID().equals(vinkki.getID())));
         assertTrue(vinkkiDao.search("otsikko", "otsake").isEmpty());

@@ -218,8 +218,6 @@ public class Stepdefs {
     @Then("^tulosteessa on sana \"([^\"]*)\" ennen sanaa \"([^\"]*)\"$")
     public void sana_on_ennen_sanaa(String sana, String toinenSana) throws Throwable {
         String s = stubIO.getOutput().toString();
-        System.out.println(s);
-        System.out.println("Eka "+ sana +" Toka "+toinenSana);
         assertTrue(s.indexOf(sana) < s.indexOf(toinenSana));
     }
 

@@ -130,11 +130,12 @@ public class SQLHintDAO implements HintDAO {
 
     @Override
     public List<HintClass> search(String attribute, String value) throws Exception {
-        String lause = "SELECT id, otsikko, kommentti, url, luettu_aikaleima FROM Vinkki WHERE lower(" + attribute + ") LIKE ?";
+        if(!attribute.equals("otsikko") && !attribute.equals("kommentti") ) return null;
+
+        String s = "SELECT id, otsikko, kommentti, url, luettu_aikaleima FROM Vinkki WHERE LOWER( " + attribute + " ) LIKE ?";
         try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement(lause);
-            stmt.setString(1, "%"+value+"%");
-            //stmt.setInt(1, id);
+            PreparedStatement stmt = connection.prepareStatement(s);
+            stmt.setString(1, "%" + value + "%");
 
             ResultSet rs = stmt.executeQuery();
 
@@ -145,9 +146,9 @@ public class SQLHintDAO implements HintDAO {
                 results.add(new HintClass(rs.getInt("id"), rs.getString("otsikko"), rs.getString("kommentti"), rs.getString("url"), timestamp == null ? null : new Date(timestamp)));
 
             }
-
             return results;
         }
-    }
-}
 
+    }
+
+}
