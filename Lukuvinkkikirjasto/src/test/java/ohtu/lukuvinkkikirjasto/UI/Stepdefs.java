@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
+import ohtu.lukuvinkkikirjasto.actions.AddByISBN;
 import ohtu.lukuvinkkikirjasto.dao.MockHintDAO;
 import ohtu.lukuvinkkikirjasto.dao.MockMakerDAO;
 import ohtu.lukuvinkkikirjasto.dao.MockMakerHintAssociationTable;
@@ -28,6 +29,7 @@ import ohtu.lukuvinkkikirjasto.dao.TagDAO;
 import ohtu.lukuvinkkikirjasto.dao.TagHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.hint.Hint;
 import ohtu.lukuvinkkikirjasto.hint.HintClass;
+import ohtu.lukuvinkkikirjasto.isbn.MockISBNFetcher;
 import ohtu.lukuvinkkikirjasto.tag.Tag;
 import org.junit.Assert;
 import static org.junit.Assert.*;
@@ -48,7 +50,7 @@ public class Stepdefs {
     DeleteHint deleteHint;
     ShowHint showHint;
     ModifyHint modifyHint;
-
+    AddByISBN addByISBN;
 
     App app;
 
@@ -61,7 +63,9 @@ public class Stepdefs {
 
         showHint = new ShowHint(mockDao, tagDAO, makerDAO, connectTag, connectMaker);
         modifyHint = new ModifyHint(mockDao,tagDAO,connectTag);
-        app = new App(stubIO, addHint, queryHints,searchTag, showHint, deleteHint,modifyHint);
+        addByISBN = new AddByISBN(mockDao, tagDAO, makerDAO, connectTag, connectMaker, new MockISBNFetcher());
+        
+        app = new App(stubIO, addHint, queryHints,searchTag, showHint, deleteHint,modifyHint, addByISBN);
 
         app.start();
     }
@@ -370,6 +374,22 @@ public class Stepdefs {
         Arrays.sort(tagsFromDB);
         
         assertArrayEquals(tagsSplit, tagsFromDB);
+    }
+    
+    @When("^Käyttäjä valitsee vinkin lisäämisen ISBN perusteella ja ISBN:ksi \"([^\"]*)\"$")
+    public void käyttäjä_valitsee_vinkin_lisäämisen_ISBN_perusteella_ja_ISBN_ksi(String isbn) throws Throwable {
+        stubIO.pushInt(app.findAction(addByISBN.getHint()));
+        
+        stubIO.pushString(isbn);
+        
+        wait(500);
+    }
+
+    @When("^Käyttäjä syöttää vinkille kommentin \"([^\"]*)\"$")
+    public void käyttäjä_syöttää_vinkille_kommentin(String comment) throws Throwable {
+        stubIO.pushString(comment);
+        
+        wait(500);
     }
 
     private void wait(int millis) {
