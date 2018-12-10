@@ -17,6 +17,7 @@ import ohtu.lukuvinkkikirjasto.actions.DeleteHint;
 import ohtu.lukuvinkkikirjasto.actions.ModifyHint;
 import ohtu.lukuvinkkikirjasto.actions.QueryHints;
 import ohtu.lukuvinkkikirjasto.actions.SearchByAttributes;
+import ohtu.lukuvinkkikirjasto.actions.QueryReadHints;
 import ohtu.lukuvinkkikirjasto.actions.SearchByTag;
 import ohtu.lukuvinkkikirjasto.actions.ShowHint;
 import ohtu.lukuvinkkikirjasto.dao.SQLTagDAO;
@@ -54,7 +55,8 @@ public class Main {
                 new DeleteHint(hdao),
                 new SearchByAttributes(hdao, mdao, makerAssociation),
                 new AddByISBN(hdao, tdao, mdao, tagAssociation, makerAssociation, isbnFetcher),
-                new ModifyHint(hdao, tdao, mdao, tagAssociation, makerAssociation));
+                new ModifyHint(hdao, tdao, mdao, tagAssociation, makerAssociation),
+                new QueryReadHints(hdao));
         app.start();
 
         app.join();
