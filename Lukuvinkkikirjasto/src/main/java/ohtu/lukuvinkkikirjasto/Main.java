@@ -52,9 +52,9 @@ public class Main {
                 new SearchByTag(hdao, tdao, tagAssociation),
                 new ShowHint(hdao, tdao, mdao,tagAssociation, makerAssociation),
                 new DeleteHint(hdao),
-                new ModifyHint(hdao, tdao, tagAssociation),
                 new SearchByAttributes(hdao, mdao, makerAssociation),
-                new AddByISBN(hdao, tdao, mdao, tagAssociation, makerAssociation, isbnFetcher));
+                new AddByISBN(hdao, tdao, mdao, tagAssociation, makerAssociation, isbnFetcher),
+                new ModifyHint(hdao, tdao, mdao, tagAssociation, makerAssociation));
         app.start();
 
         app.join();

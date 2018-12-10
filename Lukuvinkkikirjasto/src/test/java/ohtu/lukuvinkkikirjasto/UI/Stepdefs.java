@@ -67,11 +67,13 @@ public class Stepdefs {
         deleteHint = new DeleteHint(mockDao);
 
         showHint = new ShowHint(mockDao, tagDAO, makerDAO, connectTag, connectMaker);
-        modifyHint = new ModifyHint(mockDao, tagDAO, connectTag);
+
         searchByAttributes = new SearchByAttributes(mockDao, makerDAO, connectMaker);
         addByISBN = new AddByISBN(mockDao, tagDAO, makerDAO, connectTag, connectMaker, new MockISBNFetcher());
-        
+        modifyHint = new ModifyHint(mockDao,tagDAO,makerDAO, connectTag, connectMaker);
         app = new App(stubIO, addHint, queryHints,searchTag, showHint, deleteHint,modifyHint, searchByAttributes, addByISBN);
+
+        
 
         app.start();
     }
@@ -335,6 +337,8 @@ public class Stepdefs {
         stubIO.pushInt(id);
         stubIO.pushString(title);
 
+
+        stubIO.pushString("");
         stubIO.pushString("");
         stubIO.pushString("");
         stubIO.pushString("");
@@ -406,22 +410,79 @@ public class Stepdefs {
 
         assertArrayEquals(tagsSplit, tagsFromDB);
     }
-    
+
     @When("^Käyttäjä valitsee vinkin lisäämisen ISBN perusteella ja ISBN:ksi \"([^\"]*)\"$")
     public void käyttäjä_valitsee_vinkin_lisäämisen_ISBN_perusteella_ja_ISBN_ksi(String isbn) throws Throwable {
         stubIO.pushInt(app.findAction(addByISBN.getHint()));
-        
+
         stubIO.pushString(isbn);
-        
+
         wait(500);
     }
 
     @When("^Käyttäjä syöttää vinkille kommentin \"([^\"]*)\"$")
     public void käyttäjä_syöttää_vinkille_kommentin(String comment) throws Throwable {
         stubIO.pushString(comment);
-        
+
         wait(500);
     }
+
+    @When("^Ei lisää uusia tekijoita$")
+    public void ei_lisää_uusia_tekijoita() throws Throwable {
+        stubIO.pushString("\n");
+        stubIO.pushString("n");
+    }
+
+    @Given("^Tietokantaan on tallennettu vinkki otsikkolla \"([^\"]*)\", kuvauksella \"([^\"]*)\" ja tekijalla \"([^\"]*)\"$")
+    public void tietokantaan_on_tallennettu_vinkki_otsikkolla_kuvauksella_ja_tekijalla(String otsikko, String kuvaus, String tekija) throws Throwable {
+        stubIO.pushInt(app.findAction(addHint.getHint()));
+        wait(500);
+        stubIO.pushString(otsikko);
+        stubIO.pushString(kuvaus);
+        stubIO.pushString(tekija);
+        stubIO.pushString("\n"); //tagi tyhjä
+        stubIO.pushString("\n"); // URL tyhjä
+        wait(500);
+    }
+
+    @When("^Syöttää muokattavan vinkin ID:ksi (\\d+) ja otsikoksi \"([^\"]*)\" ja jättää muut kentät tyhjäksi, mutta muokkaa tekijöitä$")
+    public void syöttää_muokattavan_vinkin_ID_ksi_ja_otsikoksi_ja_jättää_muut_kentät_tyhjäksi_mutta_muokkaa_tekijöitä(int id, String otsikko) throws Throwable {
+        stubIO.pushInt(id);
+        stubIO.pushString(otsikko);
+        stubIO.pushString(""); // no comment
+        stubIO.pushString(""); // no URL
+
+        stubIO.pushString("\n"); // no tags
+        stubIO.pushString("\n"); // no tags
+
+        wait(500);
+    }
+
+    @When("^Lisää uudet tekijat \"([^\"]*)\"$")
+    public void lisää_uudet_tekijat(String tekijat) throws Throwable {
+        stubIO.pushString(tekijat);
+
+        wait(500);
+    }
+
+    @When("^Poistaa tekijan \"([^\"]*)\" painamalla \"y$")
+    public void poistaa_tekijan_painamalla_y(String action) throws Throwable {
+        stubIO.pushString("y");
+
+        wait(500);
+    }
+
+    @Then("^Vinkillä (\\d+) on tekijoina \"([^\"]*)\"$")
+    public void vinkillä_on_tekijoina(int id, String makers) throws Throwable {
+        String[] makersSplit = makers.split(",");
+        String[] makersFromDB = connectMaker.findAForB(mockDao.findOne(id)).stream().map(maker -> maker.getMaker()).collect(Collectors.toList()).toArray(new String[0]);
+
+        Arrays.sort(makersSplit);
+        Arrays.sort(makersFromDB);
+
+        assertArrayEquals(makersSplit, makersFromDB);
+    }
+
 
     private void wait(int millis) {
         try {
