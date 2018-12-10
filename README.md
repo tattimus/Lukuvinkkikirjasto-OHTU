@@ -35,5 +35,7 @@ Ohjelman päävalikosta voit valita haluamasi toiminnon toiminnon edessä sulkei
 * **Poista vinkki** Syötä poistettavan vinkin id.
 * **Listaa vinkit** Tulostuu lista kaikista ohjelmaan tallennetuista vinkeistä.
 * **Näytä vinkki** Syötä näytettävän vinkin id. Näyttämisen yhteydessä voit merkitä vinkin luetuksi. Luetuksi merkitsemisen jälkeen vinkin tiedoissa näkyy tieto siitä, milloin se on luettu.
-* **Muokkaa vinkkiä** Syötä ne tiedot jotka haluat muuttaa. Voit myös lisätä ja poistaa tageja.
+* **Muokkaa vinkkiä** Syötä ne tiedot jotka haluat muuttaa. Voit myös lisätä ja poistaa tageja sekä tekijätietoja.
+* **Lisää ISBN:n perusteella** Syötä kirjan ISBN. Ohjelma kysyy puuttuvat tiedot ja tallettaa vinkin  kantaan.
+* **Listaa luetut vinkit** Ohjelma listaa kaikki vinkit jotka on merkitty luetuiksi.
 * **Lopeta** Ohjelman suoritus lopetetaan.
