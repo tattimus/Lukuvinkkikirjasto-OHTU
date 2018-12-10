@@ -21,7 +21,7 @@ public class ISBNValidator {
             int sum = 0;
             int multiplier = 1;
             for (char c : isbn.replaceAll("-", "").toCharArray()) {
-                sum = multiplier * Character.getNumericValue(c);
+                sum += multiplier * Character.getNumericValue(c);
                 
                 if (multiplier == 3) {
                     multiplier = 1;
