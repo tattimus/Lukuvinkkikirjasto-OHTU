@@ -21,6 +21,7 @@ import ohtu.lukuvinkkikirjasto.actions.AddHint;
 import ohtu.lukuvinkkikirjasto.actions.DeleteHint;
 import ohtu.lukuvinkkikirjasto.actions.ModifyHint;
 import ohtu.lukuvinkkikirjasto.actions.QueryHints;
+import ohtu.lukuvinkkikirjasto.actions.QueryReadHints;
 import ohtu.lukuvinkkikirjasto.actions.SearchByTag;
 import ohtu.lukuvinkkikirjasto.actions.ShowHint;
 import ohtu.lukuvinkkikirjasto.dao.MockTagDAO;
@@ -46,6 +47,7 @@ public class Stepdefs {
 
     AddHint addHint;
     QueryHints queryHints;
+    QueryReadHints queryReadHints;
     SearchByTag searchTag;
     DeleteHint deleteHint;
     ShowHint showHint;
@@ -58,6 +60,7 @@ public class Stepdefs {
     public void ohjelma_on_käynnistetty() throws Throwable {
         addHint = new AddHint(mockDao, tagDAO, makerDAO, connectTag, connectMaker);
         queryHints = new QueryHints(mockDao);
+        queryReadHints = new QueryReadHints(mockDao);
         searchTag = new SearchByTag(mockDao, tagDAO, connectTag);
         deleteHint = new DeleteHint(mockDao);
 
@@ -65,7 +68,7 @@ public class Stepdefs {
         modifyHint = new ModifyHint(mockDao,tagDAO,connectTag);
         addByISBN = new AddByISBN(mockDao, tagDAO, makerDAO, connectTag, connectMaker, new MockISBNFetcher());
         
-        app = new App(stubIO, addHint, queryHints,searchTag, showHint, deleteHint,modifyHint, addByISBN);
+        app = new App(stubIO, addHint, queryHints, queryReadHints, searchTag, showHint, deleteHint,modifyHint, addByISBN);
 
         app.start();
     }
@@ -142,6 +145,10 @@ public class Stepdefs {
     public void ohjelma_tulostaa(String output) throws Throwable {
         assertTrue(stubIO.getOutput().stream().filter(line -> line.contains(output)).findAny().isPresent());
     }
+     @Then("^Ohjelma ei tulosta \"([^\"]*)\"$")
+    public void ohjelma_ei_tulosta(String output) throws Throwable {
+        assertTrue(!stubIO.getOutput().stream().filter(line -> line.contains(output)).findAny().isPresent());
+    }
 
     @Given("^Ohjelma pysähtyy$")
     public void ohjelma_pysähtyy() throws Throwable {
@@ -187,13 +194,13 @@ public class Stepdefs {
         HintClass hint = mockDao.findOne(id);
         assertTrue(hint.getTimestamp() == null);
     }
-    
+
     @Then("Vinkin (\\d+) lukukuittaus tulostuu oikein$")
     public void Vinkin_lukukuittaus_tulostuu(int id) throws Throwable {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String s=sdf.format(mockDao.findOne(id).getTimestamp());
+        String s = sdf.format(mockDao.findOne(id).getTimestamp());
 
-        assertTrue(stubIO.getOutput().stream().filter(line -> line.contains("luettu: "+ s)).findAny().isPresent());
+        assertTrue(stubIO.getOutput().stream().filter(line -> line.contains("luettu: " + s)).findAny().isPresent());
     }
 
     @Given("^Tietokantaan on tallennettu vinkki otsikkolla \"([^\"]*)\", kuvauksella \"([^\"]*)\" ja tagilla \"([^\"]*)\"$")
@@ -223,6 +230,12 @@ public class Stepdefs {
         wait(500);
     }
 
+    @When("^Käyttäjä valitsee luettujen vinkkien listauksen$")
+    public void käyttäjä_valitsee_luettujen_vinkkien_listauksen() throws Throwable {
+        stubIO.pushInt(app.findAction(queryReadHints.getHint()));
+        wait(500);
+    }
+
     @Given("^Tietokantaan on tallennettu vinkki otsikkolla \"([^\"]*)\", kuvauksella \"([^\"]*)\" ja tagilla \"([^\"]*)\" ja urlilla \"([^\"]*)\"$")
     public void tietokantaa_on_tallennettu_vinkki_otsikkolla_kuvauksella_tagilla_urlilla(String otsikko, String kuvaus, String tag, String url) throws Throwable {
         stubIO.pushInt(app.findAction(addHint.getHint()));
@@ -235,7 +248,7 @@ public class Stepdefs {
         wait(500);
     }
 
-    //    Then Kirjastoon on lisätty vinkki, jolla on otsikkona "otsikko" ja kommenttina "kommentti" ja urlina "url"
+    //Then Kirjastoon on lisätty vinkki, jolla on otsikkona "otsikko" ja kommenttina "kommentti" ja urlina "url"
     @Then("^Kirjastoon on lisätty vinkki, jolla on otsikkona \"([^\"]*)\" ja kommenttina \"([^\"]*)\" ja urlina \"([^\"]*)\"$")
     public void kirjastoon_on_lisätty_vinkki_jolla_url(String otsikko, String kommentti, String url) throws Throwable {
         boolean added = mockDao.findAll().stream().anyMatch(hint -> hint.getTitle().equals(otsikko)
@@ -302,21 +315,20 @@ public class Stepdefs {
     public void syöttää_muokattavan_vinkin_ID_ksi_ja_otsikoksi_ja_jättää_muut_kentät_tyhjäksi(int id, String title) throws Throwable {
         stubIO.pushInt(id);
         stubIO.pushString(title);
-        
+
         stubIO.pushString("");
         stubIO.pushString("");
         stubIO.pushString("");
 
         wait(500);
     }
-    
+
     @When("^Peruu muutokset valitsemalla \"([^\"]*)\"$")
     public void peruu_muutokset_valitsemalla(String selection) throws Throwable {
         stubIO.pushString(selection);
 
         wait(500);
     }
-
 
     @When("^Varmistaa muutokset valitsemalla \"([^\"]*)\"$")
     public void varmistaa_muutokset_valitsemalla(String selection) throws Throwable {
@@ -329,17 +341,17 @@ public class Stepdefs {
     public void vinkin_otsikko_on(int id, String title) throws Throwable {
         assertEquals(title, mockDao.findOne(id).getTitle());
     }
-    
+
     @Then("^Vinkin ID (\\d+) Aikaleima tulostuu$")
     public void vinkin_ID_Aikaleima_tulostuu(int id) throws Throwable {
-        ohjelma_tulostaa(mockDao.findOne(id).getTimestamp().toString().substring(0,16));
+        ohjelma_tulostaa(mockDao.findOne(id).getTimestamp().toString().substring(0, 16));
     }
-    
+
     @Then("^Vinkin ID (\\d+) Aikaleima ei tulostuu$")
     public void vinkin_ID_Aikaleima_ei_tulostuu(int id) throws Throwable {
         assertFalse(stubIO.getOutput().stream().filter(line -> line.contains("luettu")).findAny().isPresent());
     }
-    
+
     @When("^Syöttää muokattavan vinkin ID:ksi (\\d+) ja otsikoksi \"([^\"]*)\" ja jättää muut kentät tyhjäksi, mutta muokkaa tageja$")
     public void syöttää_muokattavan_vinkin_ID_ksi_ja_otsikoksi_ja_jättää_muut_kentät_tyhjäksi_mutta_muokkaa_tageja(int id, String title) throws Throwable {
         stubIO.pushInt(id);
@@ -347,21 +359,21 @@ public class Stepdefs {
 
         stubIO.pushString("");
         stubIO.pushString("");
-        
+
         wait(500);
     }
 
     @When("^Poistaa tagin \"([^\"]*)\" painamalla \"([^\"]*)\"$")
     public void poistaa_tagin_painamalla(String tag, String action) throws Throwable {
         stubIO.pushString(action);
-        
+
         wait(500);
     }
 
     @When("^Lisää uudet tagit \"([^\"]*)\"$")
     public void lisää_uudet_tagit(String tags) throws Throwable {
         stubIO.pushString(tags);
-        
+
         wait(500);
     }
 
@@ -369,10 +381,10 @@ public class Stepdefs {
     public void vinkillä_on_tageina(int id, String tags) throws Throwable {
         String[] tagsSplit = tags.split(",");
         String[] tagsFromDB = connectTag.findAForB(mockDao.findOne(id)).stream().map(tag -> tag.getTag()).collect(Collectors.toList()).toArray(new String[0]);
-        
+
         Arrays.sort(tagsSplit);
         Arrays.sort(tagsFromDB);
-        
+
         assertArrayEquals(tagsSplit, tagsFromDB);
     }
     
