@@ -60,7 +60,9 @@ public class Stepdefs {
     ShowHint showHint;
     ModifyHint modifyHint;
     AddByISBN addByISBN;
+
     SearchByAttributes searchByAttributes;
+
 
     App app;
 
@@ -74,10 +76,12 @@ public class Stepdefs {
 
         showHint = new ShowHint(mockDao, tagDAO, makerDAO, connectTag, connectMaker);
 
+
         searchByAttributes = new SearchByAttributes(mockDao, makerDAO, connectMaker);
         addByISBN = new AddByISBN(mockDao, tagDAO, makerDAO, connectTag, connectMaker, new MockISBNFetcher());
         modifyHint = new ModifyHint(mockDao,tagDAO,makerDAO, connectTag, connectMaker);
         app = new App(stubIO, addHint, queryHints, queryReadHints, searchTag, showHint, deleteHint,modifyHint, searchByAttributes, addByISBN);
+
 
 
 
@@ -356,6 +360,7 @@ public class Stepdefs {
     public void syöttää_muokattavan_vinkin_ID_ksi_ja_otsikoksi_ja_jättää_muut_kentät_tyhjäksi(int id, String title) throws Throwable {
         stubIO.pushInt(id);
         stubIO.pushString(title);
+
 
 
 

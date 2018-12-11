@@ -56,6 +56,7 @@ public class Main {
                 new SearchByAttributes(hdao, mdao, makerAssociation),
                 new AddByISBN(hdao, tdao, mdao, tagAssociation, makerAssociation, isbnFetcher),
                 new ModifyHint(hdao, tdao, mdao, tagAssociation, makerAssociation),
+
                 new QueryReadHints(hdao));
         app.start();
 
