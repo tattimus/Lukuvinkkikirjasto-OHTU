@@ -1,5 +1,7 @@
 plugins {
   id 'com.github.johnrengelman.shadow' version '4.0.2'
+  
+
 }
 
 apply plugin: 'java'
@@ -45,7 +47,7 @@ dependencies {
     // You can read more about how to add dependency here:
     //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
     testCompile group: 'junit', name: 'junit', version: '4.10'
-    
+
     testCompile 'info.cukes:cucumber-java:' + cucumberVersion
     testCompile 'info.cukes:cucumber-junit:' + cucumberVersion
 }

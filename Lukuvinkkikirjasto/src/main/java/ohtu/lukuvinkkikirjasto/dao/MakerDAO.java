@@ -28,4 +28,6 @@ public interface MakerDAO extends DAO<Maker> {
     void update(Maker object) throws Exception;
     
     Maker insertOrGet(Maker object) throws Exception;
+    
+    List<Maker> findByMaker(String makerName) throws Exception;
 }

@@ -76,4 +76,12 @@ public class SQLMakerDAOTest {
         
         assertEquals(id, (int)dao.insertOrGet(tekija2).getID());
     }
+    @Test
+    public void testQueryMakerName() throws Exception {
+        Maker tekija=new Maker(null, "William Stallings");
+        int id=dao.insert(tekija);
+        assertTrue(dao.findByMaker(tekija.getMaker()).stream().anyMatch(maker->maker.getMaker().equals(tekija.getMaker())));
+        assertTrue(dao.findByMaker(tekija.getMaker().toLowerCase()).stream().anyMatch(maker->maker.getMaker().equals(tekija.getMaker())));
+        assertTrue(dao.findByMaker("William").stream().anyMatch(maker->maker.getMaker().equals(tekija.getMaker())));
+    }
 }

@@ -8,6 +8,7 @@ package ohtu.lukuvinkkikirjasto.dao;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import ohtu.lukuvinkkikirjasto.hint.Hint;
@@ -47,6 +48,19 @@ public class MockHintDAO implements HintDAO {
     public void update(HintClass object) throws Exception {
         map.put(object.getID(), object);
 
+    }
+
+    @Override
+    public List<HintClass> search(String attribute, String value) throws Exception {
+        List<HintClass> searchResult=new ArrayList<>();
+        List<HintClass> hints=new ArrayList<>(map.values());
+        for(HintClass h: hints) {
+            if(attribute.equals("otsikko") && h.getTitle().toLowerCase().contains(value)) searchResult.add(h);
+            if(attribute.equals("kommentti")&& h.getComment().toLowerCase().contains(value)) searchResult.add(h);
+        }
+
+        return searchResult;
+        
     }
 
 }

@@ -16,6 +16,7 @@ import ohtu.lukuvinkkikirjasto.actions.AddHint;
 import ohtu.lukuvinkkikirjasto.actions.DeleteHint;
 import ohtu.lukuvinkkikirjasto.actions.ModifyHint;
 import ohtu.lukuvinkkikirjasto.actions.QueryHints;
+import ohtu.lukuvinkkikirjasto.actions.SearchByAttributes;
 import ohtu.lukuvinkkikirjasto.actions.QueryReadHints;
 import ohtu.lukuvinkkikirjasto.actions.SearchByTag;
 import ohtu.lukuvinkkikirjasto.actions.ShowHint;
@@ -33,13 +34,13 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-
     public static void main(String[] args) throws Exception {
         OkHttpClient httpClient = new OkHttpClient();
         ISBNFetcher isbnFetcher = new OpenLibraryISBNFetcher(httpClient);
-        
+
         Database database = new SQLiteDatabase(System.getProperty("user.dir")+"/lukuvinkkikirjasto.db");
         HintDAO hdao = new SQLHintDAO(database);
+
         TagDAO tdao=new SQLTagDAO(database);
         MakerDAO mdao = new SQLMakerDAO(database);
         MakerHintAssociationTable makerAssociation = new SQLMakerHintAssociationTable(database);
@@ -47,13 +48,15 @@ public class Main {
 
 
         IO io = new CommandLineIO();
-        App app = new App(io, new AddHint(hdao, tdao, mdao, tagAssociation, makerAssociation), 
-                new QueryHints(hdao), 
-                new SearchByTag(hdao, tdao, tagAssociation), 
+        App app = new App(io, new AddHint(hdao, tdao, mdao, tagAssociation, makerAssociation),
+                new QueryHints(hdao),
+                new SearchByTag(hdao, tdao, tagAssociation),
                 new ShowHint(hdao, tdao, mdao,tagAssociation, makerAssociation),
-                new DeleteHint(hdao), 
-                new ModifyHint(hdao, tdao, mdao, tagAssociation, makerAssociation),
+                new DeleteHint(hdao),
+                new SearchByAttributes(hdao, mdao, makerAssociation),
                 new AddByISBN(hdao, tdao, mdao, tagAssociation, makerAssociation, isbnFetcher),
+                new ModifyHint(hdao, tdao, mdao, tagAssociation, makerAssociation),
+
                 new QueryReadHints(hdao));
         app.start();
 

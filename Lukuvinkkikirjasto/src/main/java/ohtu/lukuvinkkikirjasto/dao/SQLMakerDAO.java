@@ -105,6 +105,24 @@ public class SQLMakerDAO implements MakerDAO {
             return results;
         }
     }
+    
+    @Override
+    public List<Maker> findByMaker(String makerName) throws Exception {
+        try (Connection connection = database.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement("SELECT id, tekija FROM Tekija where lower(tekija) LIKE ?");
+            stmt.setString(1, "%"+makerName+"%"); 
+
+            ResultSet rs = stmt.executeQuery();
+            
+            List<Maker> results = new ArrayList<>();
+            while (rs.next()) {
+                results.add(new Maker(rs.getInt("id"), rs.getString("tekija")));
+            }
+            
+            return results;
+        }
+    }
+    
 
     @Override
     public void update(Maker object) throws Exception {

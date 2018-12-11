@@ -21,7 +21,11 @@ import ohtu.lukuvinkkikirjasto.actions.AddHint;
 import ohtu.lukuvinkkikirjasto.actions.DeleteHint;
 import ohtu.lukuvinkkikirjasto.actions.ModifyHint;
 import ohtu.lukuvinkkikirjasto.actions.QueryHints;
+
+import ohtu.lukuvinkkikirjasto.actions.SearchByAttributes;
+
 import ohtu.lukuvinkkikirjasto.actions.QueryReadHints;
+
 import ohtu.lukuvinkkikirjasto.actions.SearchByTag;
 import ohtu.lukuvinkkikirjasto.actions.ShowHint;
 import ohtu.lukuvinkkikirjasto.dao.MockTagDAO;
@@ -30,6 +34,9 @@ import ohtu.lukuvinkkikirjasto.dao.TagDAO;
 import ohtu.lukuvinkkikirjasto.dao.TagHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.hint.Hint;
 import ohtu.lukuvinkkikirjasto.hint.HintClass;
+
+import ohtu.lukuvinkkikirjasto.maker.Maker;
+
 import ohtu.lukuvinkkikirjasto.isbn.MockISBNFetcher;
 import ohtu.lukuvinkkikirjasto.tag.Tag;
 import org.junit.Assert;
@@ -54,6 +61,9 @@ public class Stepdefs {
     ModifyHint modifyHint;
     AddByISBN addByISBN;
 
+    SearchByAttributes searchByAttributes;
+
+
     App app;
 
     @Given("^Ohjelma on käynnistetty$")
@@ -65,10 +75,17 @@ public class Stepdefs {
         deleteHint = new DeleteHint(mockDao);
 
         showHint = new ShowHint(mockDao, tagDAO, makerDAO, connectTag, connectMaker);
-        modifyHint = new ModifyHint(mockDao,tagDAO,makerDAO, connectTag, connectMaker);
+
+
+        searchByAttributes = new SearchByAttributes(mockDao, makerDAO, connectMaker);
         addByISBN = new AddByISBN(mockDao, tagDAO, makerDAO, connectTag, connectMaker, new MockISBNFetcher());
-        
-        app = new App(stubIO, addHint, queryHints, queryReadHints, searchTag, showHint, deleteHint,modifyHint, addByISBN);
+        modifyHint = new ModifyHint(mockDao,tagDAO,makerDAO, connectTag, connectMaker);
+        app = new App(stubIO, addHint, queryHints, queryReadHints, searchTag, showHint, deleteHint,modifyHint, searchByAttributes, addByISBN);
+
+
+
+
+
         app.start();
     }
 
@@ -155,11 +172,31 @@ public class Stepdefs {
         app.join(500);
     }
 
+    @Given("^Tietokantaan on tallennettu vinkki otsikolla \"([^\"]*)\", kuvauksella \"([^\"]*)\" ja tekijällä \"([^\"]*)\"$")
+    public void tietokantaan_on_tallennettu_vinkki_otsikolla_tekijällä_kuvauksella(String otsikko, String kuvaus, String tekija) throws Throwable {
+        HintClass hint = new HintClass(null, otsikko, kuvaus, "");
+        int id = mockDao.insert(hint);
+        hint.setID(id);
+        Maker maker = new Maker(null, tekija);
+        int id2 = makerDAO.insert(maker);
+        maker.setID(id2);
+        connectMaker.associate(maker, hint);
+
+    }
+
     @When("^Käyttäjä valitsee tagilla hakemisen ja antaa tagin \"([^\"]*)\"$")
     public void käyttäjä_valitsee_tagilla_hakemisen_ja_antaa_tagin(String tag) throws Throwable {
         stubIO.pushInt(app.findAction(searchTag.getHint()));
         wait(500);
         stubIO.pushString(tag);
+        wait(500);
+    }
+
+    @When("^Käyttäjä valitsee vapaan haun ja antaa hakusanan \"([^\"]*)\"$")
+    public void käyttäjä_valitsee_vapaan_haun_ja_antaa_hakusanan(String word) throws Throwable {
+        stubIO.pushInt(app.findAction(searchByAttributes.getHint()));
+        wait(500);
+        stubIO.pushString(word);
         wait(500);
     }
 
@@ -200,6 +237,15 @@ public class Stepdefs {
         String s = sdf.format(mockDao.findOne(id).getTimestamp());
 
         assertTrue(stubIO.getOutput().stream().filter(line -> line.contains("luettu: " + s)).findAny().isPresent());
+
+    }
+
+    @Then("^tulosteessa on sana \"([^\"]*)\" ennen sanaa \"([^\"]*)\"$")
+    public void sana_on_ennen_sanaa(String sana, String toinenSana) throws Throwable {
+        String s = stubIO.getOutput().toString();
+        assertTrue(s.indexOf(sana) < s.indexOf(toinenSana));
+
+        
     }
 
     @Given("^Tietokantaan on tallennettu vinkki otsikkolla \"([^\"]*)\", kuvauksella \"([^\"]*)\" ja tagilla \"([^\"]*)\"$")
@@ -314,8 +360,11 @@ public class Stepdefs {
     public void syöttää_muokattavan_vinkin_ID_ksi_ja_otsikoksi_ja_jättää_muut_kentät_tyhjäksi(int id, String title) throws Throwable {
         stubIO.pushInt(id);
         stubIO.pushString(title);
-        
-        stubIO.pushString(""); 
+
+
+
+
+        stubIO.pushString("");
 
         stubIO.pushString("");
         stubIO.pushString("");
@@ -388,20 +437,20 @@ public class Stepdefs {
 
         assertArrayEquals(tagsSplit, tagsFromDB);
     }
-    
+
     @When("^Käyttäjä valitsee vinkin lisäämisen ISBN perusteella ja ISBN:ksi \"([^\"]*)\"$")
     public void käyttäjä_valitsee_vinkin_lisäämisen_ISBN_perusteella_ja_ISBN_ksi(String isbn) throws Throwable {
         stubIO.pushInt(app.findAction(addByISBN.getHint()));
-        
+
         stubIO.pushString(isbn);
-        
+
         wait(500);
     }
 
     @When("^Käyttäjä syöttää vinkille kommentin \"([^\"]*)\"$")
     public void käyttäjä_syöttää_vinkille_kommentin(String comment) throws Throwable {
         stubIO.pushString(comment);
-        
+
         wait(500);
     }
 
@@ -417,7 +466,7 @@ public class Stepdefs {
         wait(500);
         stubIO.pushString(otsikko);
         stubIO.pushString(kuvaus);
-        stubIO.pushString(tekija); 
+        stubIO.pushString(tekija);
         stubIO.pushString("\n"); //tagi tyhjä
         stubIO.pushString("\n"); // URL tyhjä
         wait(500);
@@ -432,7 +481,7 @@ public class Stepdefs {
 
         stubIO.pushString("\n"); // no tags
         stubIO.pushString("\n"); // no tags
-        
+
         wait(500);
     }
 
@@ -446,7 +495,7 @@ public class Stepdefs {
     @When("^Poistaa tekijan \"([^\"]*)\" painamalla \"y$")
     public void poistaa_tekijan_painamalla_y(String action) throws Throwable {
         stubIO.pushString("y");
-        
+
         wait(500);
     }
 
@@ -454,10 +503,10 @@ public class Stepdefs {
     public void vinkillä_on_tekijoina(int id, String makers) throws Throwable {
         String[] makersSplit = makers.split(",");
         String[] makersFromDB = connectMaker.findAForB(mockDao.findOne(id)).stream().map(maker -> maker.getMaker()).collect(Collectors.toList()).toArray(new String[0]);
-        
+
         Arrays.sort(makersSplit);
         Arrays.sort(makersFromDB);
-        
+
         assertArrayEquals(makersSplit, makersFromDB);
     }
 

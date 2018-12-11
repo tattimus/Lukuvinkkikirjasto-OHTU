@@ -20,6 +20,8 @@ public interface HintDAO extends DAO<HintClass> {
     List<HintClass> findAll() throws Exception;
 
     HintClass findOne(int id) throws Exception;
+    
+    List<HintClass> search(String attribute, String value) throws Exception;
 
     int insert(HintClass object) throws Exception;
 
