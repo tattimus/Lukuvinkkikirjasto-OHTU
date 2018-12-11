@@ -8,7 +8,11 @@ package ohtu.lukuvinkkikirjasto.requests;
 import ohtu.lukuvinkkikirjasto.IO.AsyncStubIO;
 import ohtu.lukuvinkkikirjasto.actions.ModifyHint;
 import ohtu.lukuvinkkikirjasto.dao.HintDAO;
+import ohtu.lukuvinkkikirjasto.dao.MakerDAO;
+import ohtu.lukuvinkkikirjasto.dao.MakerHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.dao.MockHintDAO;
+import ohtu.lukuvinkkikirjasto.dao.MockMakerDAO;
+import ohtu.lukuvinkkikirjasto.dao.MockMakerHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.dao.MockTagDAO;
 import ohtu.lukuvinkkikirjasto.dao.MockTagHintAssociationTable;
 import ohtu.lukuvinkkikirjasto.dao.TagDAO;
@@ -26,7 +30,9 @@ import static org.junit.Assert.*;
 public class ModifyHintTest {
     HintDAO hintDao;
     TagDAO tagDao;
-    TagHintAssociationTable association;
+    MakerDAO makerDao;
+    TagHintAssociationTable tagConnect;
+    MakerHintAssociationTable makerConnect;
     AsyncStubIO io;
     
     ModifyHint action;
@@ -35,10 +41,12 @@ public class ModifyHintTest {
     public void setup() {
         hintDao = new MockHintDAO();
         tagDao = new MockTagDAO();
-        association = new MockTagHintAssociationTable();
+        makerDao = new MockMakerDAO();
+        tagConnect = new MockTagHintAssociationTable();
+        makerConnect = new MockMakerHintAssociationTable();
         io = new AsyncStubIO();
         
-        action = new ModifyHint(hintDao, tagDao, association);
+        action = new ModifyHint(hintDao, tagDao, makerDao, tagConnect, makerConnect);
     }
     
     @Test
@@ -62,6 +70,8 @@ public class ModifyHintTest {
         io.pushString("muokattu_kommentti");
         io.pushString("muokattu_url");
         //Ei tageja
+        io.pushString("");
+        //Ei tekijöitä
         io.pushString("");
         //Tee muutokset
         io.pushString("y");
