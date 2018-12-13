@@ -83,8 +83,10 @@ public class SQLHintDAOTest {
         HintClass vinkki=new HintClass(null, "Computer", "kurssikirja", "https://www.adlibris.com/fi/e-kirja/computer-organization-and-architecture-global-edition-9781292096865");
         vinkki.setID(vinkkiDao.insert(vinkki));
         assertTrue(vinkkiDao.search("otsikko", "computer").stream().anyMatch(hint-> hint.getID().equals(vinkki.getID())));
+        assertTrue(vinkkiDao.search("kommentti", "kurssikirja").stream().anyMatch(hint-> hint.getID().equals(vinkki.getID())));
+        assertTrue(vinkkiDao.search("kommentti", "kurssi").stream().anyMatch(hint-> hint.getID().equals(vinkki.getID())));
         assertTrue(vinkkiDao.search("otsikko", "otsake").isEmpty());
-        //assertEquals("testi", vinkkiDao.findOne(vinkki.getID()).getTitle());
+        
     }
 
 }
