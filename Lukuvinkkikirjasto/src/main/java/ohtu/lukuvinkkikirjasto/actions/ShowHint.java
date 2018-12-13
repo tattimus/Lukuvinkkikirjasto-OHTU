@@ -60,8 +60,8 @@ public class ShowHint extends Action {
 
             printData(hint, tags, makers, io);
             if (hint.getTimestamp() == null) {
-                String r = io.readString("\nMerkitäänkö luetuksi(y/n)");
-                if (r.equals("y") || r.equals("Y")) {
+                String r = io.readString("\nMerkitäänkö luetuksi(y/n)").toLowerCase();
+                if (r.equals("y")) {
 
                     Date ts=new Timestamp(System.currentTimeMillis());
                     hint.setTimestamp(ts);

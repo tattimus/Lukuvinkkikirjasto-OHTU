@@ -78,42 +78,33 @@ public class SearchByAttributes extends Action {
         fields.put(3, "kommentti");
 
         if (prio != 2) {
-            try {
+            searchFromHint(fields.get(prio), attribute);
 
-                List<HintClass> list = hdao.search(fields.get(prio), attribute);
-                for (HintClass h : list) {
-                    if (!this.searchResults.contains(h.getID())) {
-                        this.searchResults.add(h.getID());
-                    }
-                }
-            } catch (Exception e) {
-                io.printLine("virhe haussa");
-
-            }
         } else {
-            try {
-                List<Maker> makers = mdao.findByMaker(attribute);
-                makers.forEach(maker -> {
-                    try {
-                        List<HintClass> makersHints = this.maker_association.findBForA(maker);
-                        for (HintClass h : makersHints) {
-                            if (!this.searchResults.contains(h.getID())) {
-                                this.searchResults.add(h.getID());
-                            }
-                        }
-
-                    } catch (Exception ex) {
-                    }
-                });
-            } catch (Exception e) {
-            }
+            searchFromMakers(attribute);
+//            try {
+//                List<Maker> makers = mdao.findByMaker(attribute);
+//                makers.forEach(maker -> {
+//                    try {
+//                        List<HintClass> makersHints = this.maker_association.findBForA(maker);
+//                        makersHints.stream().filter((h) -> (!this.searchResults.contains(h.getID()))).forEach((h) -> {
+//                            this.searchResults.add(h.getID());
+//                        });
+//
+//                    } catch (Exception ex) {
+//                    }
+//                });
+//            } catch (Exception e) {
+//            }
         }
 
     }
 
     private void printResults() {
-        
-        if(searchResults.isEmpty()) io.printLine("\nHakusanalla ei löytynyt tuloksia");
+
+        if (searchResults.isEmpty()) {
+            io.printLine("\nHakusanalla ei löytynyt tuloksia");
+        }
         this.searchResults.forEach(hint -> {
             io.printLine("");
             try {
@@ -129,6 +120,36 @@ public class SearchByAttributes extends Action {
 
             }
         });
+    }
+
+    private void searchFromHint(String attribute, String attributeValue) {
+        try {
+
+            List<HintClass> list = hdao.search(attribute, attributeValue);
+            list.stream().filter((h) -> (!this.searchResults.contains(h.getID()))).forEach((h) -> {
+                this.searchResults.add(h.getID());
+            });
+        } catch (Exception e) {
+            io.printLine("virhe haussa");
+
+        }
+    }
+
+    private void searchFromMakers(String attribute) {
+        try {
+            List<Maker> makers = mdao.findByMaker(attribute);
+            makers.forEach(maker -> {
+                try {
+                    List<HintClass> makersHints = this.maker_association.findBForA(maker);
+                    makersHints.stream().filter((h) -> (!this.searchResults.contains(h.getID()))).forEach((h) -> {
+                        this.searchResults.add(h.getID());
+                    });
+
+                } catch (Exception ex) {
+                }
+            });
+        } catch (Exception e) {
+        }
     }
 
 }
