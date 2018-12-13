@@ -39,7 +39,7 @@ Feature: Käyttäjänä voin muokata vinkkejä
     And Tietokantaan on tallennettu vinkki otsikkolla "test", kuvauksella "testing" ja tekijalla "tekija1"
     When Käyttäjä valitsee vinkin muokkaamisen
     And Syöttää muokattavan vinkin ID:ksi 0 ja otsikoksi "test_otsikko" ja jättää muut kentät tyhjäksi, mutta muokkaa tekijöitä
-    And Poistaa tekijan "tekija1" painamalla "y
+    And Poistaa tekijan "tekija1" painamalla "y"
     And Lisää uudet tekijat "A,B"
     And Varmistaa muutokset valitsemalla "y"
     Then Ohjelma tulostaa "Vinkin 0 tiedot muokattu"

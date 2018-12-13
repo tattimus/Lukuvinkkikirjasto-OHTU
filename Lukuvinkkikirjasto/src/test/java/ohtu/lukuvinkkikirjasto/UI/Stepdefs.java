@@ -492,8 +492,8 @@ public class Stepdefs {
         wait(500);
     }
 
-    @When("^Poistaa tekijan \"([^\"]*)\" painamalla \"y$")
-    public void poistaa_tekijan_painamalla_y(String action) throws Throwable {
+    @When("^Poistaa tekijan \"([^\"]*)\" painamalla \"([^\"]*)\"$")
+    public void poistaa_tekijan_painamalla(String arg1, String arg2) throws Throwable {
         stubIO.pushString("y");
 
         wait(500);
@@ -510,6 +510,30 @@ public class Stepdefs {
         assertArrayEquals(makersSplit, makersFromDB);
     }
 
+    @When("^Käyttäjä valitsee vinkin lisäämisen ja syöttää otsikoksi \"([^\"]*)\" ja kommentiksi \"([^\"]*)\" ja vain tekijän \"([^\"]*)\"$")
+    public void käyttäjä_valitsee_vinkin_lisäämisen_ja_syöttää_otsikoksi_ja_kommentiksi_ja_vain_tekijän(String otsikko, String kommentti, String tekija) throws Throwable {
+        //Valitse vinkin lisääminen
+        stubIO.pushInt(app.findAction(addHint.getHint()));
+        wait(500);
+        
+        stubIO.pushString(otsikko);
+        stubIO.pushString(kommentti);
+        stubIO.pushString(tekija); 
+        stubIO.pushString("\n"); //ei tageja
+        stubIO.pushString("\n"); //ei URLia
+        wait(500);
+    }
+
+    @Then("^Kirjastoon on lisätty vinkki, jolla on otsikkona \"([^\"]*)\" ja kommenttina \"([^\"]*)\" ja tekijänä \"([^\"]*)\"$")
+    public void kirjastoon_on_lisätty_vinkki_jolla_on_otsikkona_ja_kommenttina_ja_tekijänä(String otsikko, String kommentti, String tekija) throws Throwable {
+        kirjastoon_on_lisätty_vinkki_jolla_on_otsikkona_ja_kommenttina(otsikko,kommentti);
+        assertTrue(makerDAO.findAll().toString().contains(tekija));
+    }
+
+    @Given("^Tietokantaan on tallennettu vinkki id:llä (\\d+), otsikolla \"([^\"]*)\", kuvauksella \"([^\"]*)\", tekijalla \"([^\"]*)\"$")
+    public void tietokantaan_on_tallennettu_vinkki_id_llä_otsikolla_kuvauksella_tekijalla(int id, String otsikko, String kommentti, String tekija) throws Throwable {
+        käyttäjä_valitsee_vinkin_lisäämisen_ja_syöttää_otsikoksi_ja_kommentiksi_ja_vain_tekijän(otsikko,kommentti,tekija);
+    }
 
     private void wait(int millis) {
         try {
